@@ -1,0 +1,219 @@
+<!-- Manage Properties Page -->
+<section class="relative bg-[#0A0A0A] pt-24 pb-12 overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-amber-500/10 to-orange-600/5 blur-[100px]"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-black text-white mb-2">My Properties</h1>
+        <p class="text-gray-300">Manage your property listings and track performance</p>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <span class="text-amber-400 font-medium">
+          <%= pluralize(@properties.count, 'property', 'properties') %>
+        </span>
+        <%= link_to new_landlord_property_path, class: "inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Add Property
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<section class="bg-[#FAFAF9] py-12 min-h-screen">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    
+    <% if @properties.any? %>
+      <!-- Properties Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @properties.each do |property| %>
+          <div class="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:border-amber-200 transition-all duration-300">
+            <!-- Property Image -->
+            <div class="relative h-56 bg-gray-100 overflow-hidden">
+              <% if property.images.attached? %>
+                <%= image_tag property.images.first, 
+                    class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500",
+                    loading: "lazy" %>
+              <% else %>
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                  <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                  </svg>
+                </div>
+              <% end %>
+
+              <!-- Top badges -->
+              <div class="absolute top-3 left-3 right-3 flex items-start justify-between">
+                <span class="px-2 py-1 text-xs font-bold rounded-full bg-emerald-500 text-white shadow-lg">
+                  <%= property.property_type.humanize %>
+                </span>
+                <div class="flex gap-2">
+                  <% if property.featured? %>
+                    <span class="px-2 py-1 text-xs font-bold rounded-full bg-amber-500 text-white shadow-lg">
+                      Featured
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+
+              <!-- Status badge -->
+              <div class="absolute bottom-3 left-3">
+                <span class="px-2 py-1 text-xs font-bold rounded-full shadow-lg
+                  <%= case property.status
+                      when 'available' then 'bg-emerald-500 text-white'
+                      when 'rented' then 'bg-blue-500 text-white'
+                      when 'inactive' then 'bg-gray-500 text-white'
+                      end %>">
+                  <%= property.status.humanize %>
+                </span>
+              </div>
+
+              <!-- Lead count -->
+              <% if property.leads.count > 0 %>
+                <div class="absolute bottom-3 right-3">
+                  <span class="px-2 py-1 text-xs font-bold rounded-full bg-purple-500 text-white shadow-lg">
+                    <%= pluralize(property.leads.count, 'lead') %>
+                  </span>
+                </div>
+              <% end %>
+            </div>
+            
+            <!-- Property Details -->
+            <div class="p-6">
+              <h3 class="font-bold text-[#1A1A1A] text-lg mb-2 line-clamp-2 group-hover:text-amber-600 transition-colors">
+                <%= link_to property.title, landlord_property_path(property), class: "hover:no-underline" %>
+              </h3>
+              
+              <div class="flex items-center text-gray-500 text-sm mb-3">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                </svg>
+                <%= property.location_text %>
+              </div>
+              
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <p class="text-2xl font-black text-amber-600">
+                    <%= property.full_price_text %>
+                  </p>
+                  <p class="text-xs text-gray-400">
+                    <%= property.payment_frequency&.humanize %>
+                  </p>
+                </div>
+                
+                <div class="text-right">
+                  <p class="text-sm font-semibold text-gray-700">
+                    <%= property.created_at.strftime("%b %Y") %>
+                  </p>
+                  <p class="text-xs text-gray-400">Listed</p>
+                </div>
+              </div>
+
+              <!-- Property specs -->
+              <% if property.bedrooms.to_i > 0 || property.bathrooms.to_i > 0 %>
+                <div class="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                  <% if property.bedrooms.to_i > 0 %>
+                    <span class="flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                      </svg>
+                      <%= property.bedrooms %> bed
+                    </span>
+                  <% end %>
+                  <% if property.bathrooms.to_i > 0 %>
+                    <span class="flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
+                      </svg>
+                      <%= property.bathrooms %> bath
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+              
+              <!-- Action buttons -->
+              <div class="flex gap-3">
+                <%= link_to landlord_property_path(property), 
+                    class: "flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-2.5 px-4 rounded-xl text-center text-sm hover:shadow-lg hover:shadow-amber-500/25 transition-all" do %>
+                  View Details
+                <% end %>
+                
+                <%= link_to edit_landlord_property_path(property),
+                    class: "px-4 py-2.5 border border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50 transition-all" do %>
+                  <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-16">
+        <div class="w-32 h-32 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-8">
+          <svg class="w-16 h-16 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+        </div>
+        
+        <h2 class="text-3xl font-bold text-[#1A1A1A] mb-4">No Properties Listed Yet</h2>
+        <p class="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+          Start building your rental business by adding your first property listing.
+        </p>
+        
+        <%= link_to new_landlord_property_path, 
+            class: "inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-amber-500/25 transition-all" do %>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Add Your First Property
+        <% end %>
+        
+        <div class="mt-12 max-w-2xl mx-auto">
+          <h3 class="text-xl font-bold text-[#1A1A1A] mb-6">Getting Started</h3>
+          <div class="grid md:grid-cols-3 gap-6 text-left">
+            <div class="bg-white rounded-2xl p-6 border border-gray-100">
+              <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+              </div>
+              <h4 class="font-bold text-[#1A1A1A] mb-2">Add Properties</h4>
+              <p class="text-sm text-gray-600">List your rental properties with detailed descriptions and photos.</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 border border-gray-100">
+              <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <h4 class="font-bold text-[#1A1A1A] mb-2">Manage Leads</h4>
+              <p class="text-sm text-gray-600">Track inquiries and convert prospects into tenants.</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 border border-gray-100">
+              <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+              </div>
+              <h4 class="font-bold text-[#1A1A1A] mb-2">Track Performance</h4>
+              <p class="text-sm text-gray-600">Monitor analytics and optimize your rental business.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
