@@ -1,0 +1,155 @@
+<div class="bg-green-600 text-white py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold mb-2">Find Your Perfect Home in Nigeria</h1>
+    <p class="text-xl">Browse through thousands of properties across all Nigerian states</p>
+  </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="lg:flex lg:gap-8">
+    <!-- Filters Sidebar -->
+    <aside class="lg:w-1/4 mb-8 lg:mb-0">
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-lg font-semibold mb-4">Filter Properties</h2>
+        
+        <%= form_with url: properties_path, method: :get, local: true do |f| %>
+          <!-- State Filter -->
+          <div class="mb-4">
+            <%= f.label :state, class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= f.select :state, options_for_select([["All States", ""]] + Property::NIGERIAN_STATES.map{|s| [s, s]}, params[:state]), 
+                        {}, 
+                        class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500" %>
+          </div>
+          
+          <!-- City Filter -->
+          <div class="mb-4">
+            <%= f.label :city, class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= f.text_field :city, value: params[:city], 
+                            class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500",
+                            placeholder: "Enter city name" %>
+          </div>
+          
+          <!-- Property Type Filter -->
+          <div class="mb-4">
+            <%= f.label :property_type, class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= f.select :property_type, 
+                        options_for_select([["All Types", ""]] + Property.property_types.map{|k,v| [k.humanize, k]}, params[:property_type]),
+                        {},
+                        class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500" %>
+          </div>
+          
+          <!-- Price Range -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Price Range (₦)</label>
+            <div class="flex gap-2">
+              <%= f.number_field :min_price, value: params[:min_price], 
+                                placeholder: "Min",
+                                class: "w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500" %>
+              <%= f.number_field :max_price, value: params[:max_price], 
+                                placeholder: "Max",
+                                class: "w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500" %>
+            </div>
+          </div>
+          
+          <!-- Bedrooms Filter -->
+          <div class="mb-6">
+            <%= f.label :bedrooms, class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= f.select :bedrooms, 
+                        options_for_select([["Any", ""], ["Studio/Self Contain", 0], ["1 Bedroom", 1], ["2 Bedrooms", 2], ["3 Bedrooms", 3], ["4+ Bedrooms", 4]], params[:bedrooms]),
+                        {},
+                        class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500" %>
+          </div>
+          
+          <%= f.submit "Apply Filters", class: "w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition" %>
+        <% end %>
+      </div>
+    </aside>
+    
+    <!-- Properties Grid -->
+    <div class="lg:w-3/4">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold">
+          Available Properties 
+          <span class="text-gray-500 text-lg">(<%= @properties.total_count %> results)</span>
+        </h2>
+        <% if user_signed_in? && current_user.can_manage_properties? %>
+          <%= link_to "List Property", new_property_path, class: "bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition" %>
+        <% end %>
+      </div>
+      
+      <% if @properties.any? %>
+        <div class="grid md:grid-cols-2 gap-6">
+          <% @properties.each do |property| %>
+            <div class="bg-white rounded-lg shadow hover:shadow-lg transition">
+              <%= link_to property_path(property) do %>
+                <!-- Property Image -->
+                <div class="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
+                  <% if property.images.attached? && property.images.first %>
+                    <%= image_tag property.images.first, class: "w-full h-full object-cover" %>
+                  <% else %>
+                    <div class="flex items-center justify-center h-full">
+                      <svg class="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                      </svg>
+                    </div>
+                  <% end %>
+                  <% if property.featured? %>
+                    <span class="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded text-sm">Featured</span>
+                  <% end %>
+                  <span class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded text-sm"><%= property.status.humanize %></span>
+                </div>
+                
+                <!-- Property Details -->
+                <div class="p-4">
+                  <h3 class="text-lg font-semibold mb-2 line-clamp-1"><%= property.title %></h3>
+                  <p class="text-gray-600 text-sm mb-2 flex items-center">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <%= property.location_text %>
+                  </p>
+                  
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-2xl font-bold text-green-600"><%= property.price_display %></span>
+                    <span class="text-sm text-gray-500"><%= property.payment_text %></span>
+                  </div>
+                  
+                  <div class="flex items-center gap-4 text-sm text-gray-600">
+                    <span class="flex items-center">
+                      <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                      </svg>
+                      <%= property.bedroom_text %>
+                    </span>
+                    <% if property.bathrooms.present? %>
+                      <span class="flex items-center">
+                        <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0a2 2 0 002-2v0a2 2 0 00-2-2H4a2 2 0 00-2 2v0a2 2 0 002 2m0 0h4m0 0v13m0-13v13m8-13v13" />
+                        </svg>
+                        <%= pluralize(property.bathrooms, 'Bath') %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="mt-8 flex justify-center">
+          <%= paginate @properties %>
+        </div>
+      <% else %>
+        <div class="bg-white rounded-lg shadow p-8 text-center">
+          <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No properties found</h3>
+          <p class="text-gray-600">Try adjusting your filters to find more properties.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
