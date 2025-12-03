@@ -3,8 +3,8 @@ FROM ruby:3.3.5
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update -qq && \
+# Fix time sync and repository issues
+RUN apt-get update -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false && \
     apt-get install -y \
     nodejs \
     npm \
@@ -15,16 +15,19 @@ RUN apt-get update -qq && \
 # Install Yarn
 RUN npm install -g yarn
 
-# Install Ruby dependencies
+# Copy Gemfile and install gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
-# Install Node dependencies
+# Copy package files and install node modules
 COPY package.json yarn.lock ./
 RUN yarn install
 
-# Copy the app
+# Copy the rest of the application
 COPY . .
 
-# Start the Rails server
+# Expose port
+EXPOSE 3000
+
+# Start Rails server
 CMD ["rails", "server", "-b", "0.0.0.0"]

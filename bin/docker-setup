@@ -15,27 +15,27 @@ if [ ! -f .env ]; then
   echo "✅ Created .env file from .env.example"
 fi
 
+# Clean up any existing containers
+echo "🧹 Cleaning up existing containers..."
+docker-compose down -v 2>/dev/null || true
+
 # Build the Docker images
 echo "🔨 Building Docker images..."
-docker-compose build
+docker-compose build --no-cache web
 
 # Start the database and redis services
 echo "🗄️  Starting database and Redis..."
 docker-compose up -d db redis
 
-# Wait for database to be ready
-echo "⏳ Waiting for database to be ready..."
-docker-compose run --rm web bash -c "until pg_isready -h db -U naija_rentals; do sleep 2; done"
+# Wait for services to be healthy
+echo "⏳ Waiting for services to be ready..."
+sleep 10
 
 # Create and setup the database
 echo "📊 Setting up database..."
-docker-compose run --rm web rails db:create
-docker-compose run --rm web rails db:migrate
-
-# Install dependencies
-echo "📦 Installing dependencies..."
-docker-compose run --rm web bundle install
-docker-compose run --rm web yarn install
+docker-compose run --rm web bundle exec rails db:create
+docker-compose run --rm web bundle exec rails db:migrate
+docker-compose run --rm web bundle exec rails db:seed
 
 # Start all services
 echo "🚀 Starting all services..."
@@ -45,14 +45,24 @@ docker-compose up -d
 echo "🎨 Starting asset compilation..."
 docker-compose --profile assets up -d
 
-echo "✅ Setup complete!"
-echo ""
-echo "🌐 NaijaRent is now running at: http://localhost:3000"
-echo ""
-echo "📝 Useful commands:"
-echo "  docker-compose up          # Start all services"
-echo "  docker-compose down        # Stop all services"
-echo "  docker-compose logs -f web # View Rails logs"
-echo "  docker-compose exec web bash # Access Rails console"
-echo "  docker-compose exec web rails console # Rails console"
-echo "  docker-compose exec web rails db:migrate # Run migrations"
+# Wait for Rails to start
+echo "⏳ Waiting for Rails to start..."
+sleep 5
+
+# Check if services are running
+if docker-compose ps | grep -q "web.*Up"; then
+  echo "✅ Setup complete!"
+  echo ""
+  echo "🌐 NaijaRent is now running at: http://localhost:3000"
+  echo ""
+  echo "📝 Useful commands:"
+  echo "  docker-compose up          # Start all services"
+  echo "  docker-compose down        # Stop all services"
+  echo "  docker-compose logs -f web # View Rails logs"
+  echo "  docker-compose exec web bash # Access Rails console"
+  echo "  docker-compose exec web rails console # Rails console"
+  echo "  docker-compose exec web rails db:migrate # Run migrations"
+else
+  echo "❌ Something went wrong. Check logs with: docker-compose logs"
+  exit 1
+fi

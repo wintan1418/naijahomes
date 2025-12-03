@@ -1,4 +1,5 @@
 # Docker Compose configuration for NaijaRent development
+# If Dockerfile.dev fails due to time sync, use Dockerfile.alpine instead
 
 services:
   db:
