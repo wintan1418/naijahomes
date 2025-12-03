@@ -28,7 +28,10 @@ class User < ApplicationRecord
   end
   
   alias_method :name, :full_name
-  alias_method :phone, :phone_number
+  
+  def phone
+    phone_number if respond_to?(:phone_number)
+  end
   
   def landlord_or_agent?
     landlord? || agent?
