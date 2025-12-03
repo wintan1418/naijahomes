@@ -1,7 +1,7 @@
 class Landlord::LeadsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_landlord_or_agent
-  before_action :set_lead, only: [:show, :edit, :update, :destroy, :advance_status, :mark_as_lost]
+  before_action :set_lead, only: [:show, :advance_status, :mark_as_lost]
   
   def index
     @leads = filtered_leads.includes(:property, :lead_notes, :lead_activities)
