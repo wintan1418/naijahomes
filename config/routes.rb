@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
   
-  root "properties#index"
+  root "home#index"
+  get "properties", to: "properties#index", as: :properties
   
   resources :properties do
     resources :leads, only: [:create]
