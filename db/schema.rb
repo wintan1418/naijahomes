@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_03_224922) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_03_233300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -119,9 +119,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_03_224922) do
     t.boolean "featured", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "listing_type", default: 0
     t.index ["city"], name: "index_properties_on_city"
     t.index ["featured"], name: "index_properties_on_featured"
     t.index ["latitude", "longitude"], name: "index_properties_on_latitude_and_longitude"
+    t.index ["listing_type"], name: "index_properties_on_listing_type"
     t.index ["price"], name: "index_properties_on_price"
     t.index ["property_type"], name: "index_properties_on_property_type"
     t.index ["state"], name: "index_properties_on_state"

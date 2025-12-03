@@ -1,72 +1,101 @@
 <!-- NaijaRent Homepage - Green White Green (Nigerian Pride Theme) -->
 
-<!-- Hero Section -->
-<section class="relative min-h-screen bg-[#0D0D0D] overflow-hidden">
-  <!-- Background Pattern -->
-  <div class="absolute inset-0">
+<!-- Hero Section with Background Slider -->
+<section class="relative min-h-screen overflow-hidden">
+  <!-- Background Image Slider -->
+  <div class="absolute inset-0" data-controller="hero-slider">
+    <!-- Slide Images -->
+    <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-100" data-hero-slider-target="slide">
+      <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop" alt="Modern Nigerian Home" class="w-full h-full object-cover">
+    </div>
+    <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0" data-hero-slider-target="slide">
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop" alt="Luxury Apartment" class="w-full h-full object-cover">
+    </div>
+    <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0" data-hero-slider-target="slide">
+      <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1920&h=1080&fit=crop" alt="Beautiful Villa" class="w-full h-full object-cover">
+    </div>
+    <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0" data-hero-slider-target="slide">
+      <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&h=1080&fit=crop" alt="Estate View" class="w-full h-full object-cover">
+    </div>
+    <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0" data-hero-slider-target="slide">
+      <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&h=1080&fit=crop" alt="Contemporary Home" class="w-full h-full object-cover">
+    </div>
+    
+    <!-- Overlay - Lighter gradient -->
+    <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+    
+    <!-- Subtle Pattern Overlay -->
     <div class="absolute inset-0 bg-[linear-gradient(rgba(0,135,81,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,135,81,0.03)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
-    <div class="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-[#008751]/10 to-transparent"></div>
-    <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#008751]/10 to-transparent"></div>
-    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full bg-[#008751]/5 blur-[150px]"></div>
   </div>
 
-  <div class="relative max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20">
+  <!-- Slider Indicators -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2" data-hero-slider-target="indicators">
+    <button class="w-12 h-1 bg-white/80 rounded-full transition-all duration-300" data-hero-slider-target="indicator" data-action="click->hero-slider#goToSlide" data-index="0"></button>
+    <button class="w-8 h-1 bg-white/30 rounded-full transition-all duration-300 hover:bg-white/50" data-hero-slider-target="indicator" data-action="click->hero-slider#goToSlide" data-index="1"></button>
+    <button class="w-8 h-1 bg-white/30 rounded-full transition-all duration-300 hover:bg-white/50" data-hero-slider-target="indicator" data-action="click->hero-slider#goToSlide" data-index="2"></button>
+    <button class="w-8 h-1 bg-white/30 rounded-full transition-all duration-300 hover:bg-white/50" data-hero-slider-target="indicator" data-action="click->hero-slider#goToSlide" data-index="3"></button>
+    <button class="w-8 h-1 bg-white/30 rounded-full transition-all duration-300 hover:bg-white/50" data-hero-slider-target="indicator" data-action="click->hero-slider#goToSlide" data-index="4"></button>
+  </div>
+
+  <!-- Hero Content -->
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20">
     <div class="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
       <!-- Left: Content -->
       <div class="space-y-8">
-        <!-- Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
+        <!-- Badge with animation -->
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full animate-fade-in-up" style="animation-delay: 0.1s;">
           <span class="w-2 h-2 bg-[#008751] rounded-full animate-pulse"></span>
-          <span class="text-sm text-white/70 font-medium">Nigeria's Premier Rental Platform</span>
+          <span class="text-sm text-white/90 font-medium">Nigeria's Premier Rental Platform</span>
         </div>
 
-        <!-- Headline -->
-        <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1]">
+        <!-- Headline with staggered animation -->
+        <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] animate-fade-in-up" style="animation-delay: 0.2s;">
           Find Your<br>
-          <span class="text-[#008751]">Perfect Home</span><br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#008751] to-emerald-400">Perfect Home</span><br>
           In Nigeria
         </h1>
 
         <!-- Subtext -->
-        <p class="text-xl text-white/60 max-w-lg leading-relaxed">
+        <p class="text-xl text-white/70 max-w-lg leading-relaxed animate-fade-in-up" style="animation-delay: 0.3s;">
           Discover premium apartments, houses, and commercial spaces across Lagos, Abuja, Port Harcourt, and beyond.
         </p>
 
         <!-- Stats Row -->
-        <div class="flex items-center gap-8 pt-4">
-          <div>
+        <div class="flex items-center gap-8 pt-4 animate-fade-in-up" style="animation-delay: 0.4s;">
+          <div class="text-center">
             <p class="text-3xl font-bold text-white">5,000<span class="text-[#008751]">+</span></p>
-            <p class="text-sm text-white/50">Properties Listed</p>
+            <p class="text-sm text-white/50">Properties</p>
           </div>
-          <div class="w-px h-12 bg-white/10"></div>
-          <div>
+          <div class="w-px h-12 bg-white/20"></div>
+          <div class="text-center">
             <p class="text-3xl font-bold text-white">2,500<span class="text-[#008751]">+</span></p>
             <p class="text-sm text-white/50">Happy Tenants</p>
           </div>
-          <div class="w-px h-12 bg-white/10"></div>
-          <div>
+          <div class="w-px h-12 bg-white/20"></div>
+          <div class="text-center">
             <p class="text-3xl font-bold text-white">36<span class="text-[#008751]">+</span></p>
-            <p class="text-sm text-white/50">States Covered</p>
+            <p class="text-sm text-white/50">States</p>
           </div>
         </div>
 
         <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 pt-4">
-          <%= link_to properties_path, class: "inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#008751] text-white font-bold rounded-xl hover:bg-[#006B40] transition-all duration-300 group" do %>
+        <div class="flex flex-col sm:flex-row gap-4 pt-4 animate-fade-in-up" style="animation-delay: 0.5s;">
+          <%= link_to properties_path, class: "inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#008751] text-white font-bold rounded-xl hover:bg-[#006B40] hover:scale-105 transition-all duration-300 group shadow-lg shadow-[#008751]/25" do %>
             <span>Browse Properties</span>
             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>
           <% end %>
           <% if user_signed_in? && (current_user.landlord? || current_user.agent?) %>
-            <%= link_to new_property_path, class: "inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-all" do %>
+            <%= link_to new_property_path, class: "inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-300" do %>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
               </svg>
               List Property
             <% end %>
           <% elsif !user_signed_in? %>
-            <%= link_to new_user_registration_path, class: "inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-all" do %>
+            <%= link_to new_user_registration_path, class: "inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-300" do %>
               Get Started Free
             <% end %>
           <% end %>
@@ -74,11 +103,8 @@
       </div>
 
       <!-- Right: Search Card -->
-      <div class="relative">
-        <div class="absolute -top-8 -left-8 w-32 h-32 bg-[#008751]/20 rounded-full blur-[60px]"></div>
-        <div class="absolute -bottom-8 -right-8 w-40 h-40 bg-[#E85D04]/10 rounded-full blur-[80px]"></div>
-        
-        <div class="relative bg-white rounded-3xl p-8 shadow-2xl">
+      <div class="relative animate-fade-in-up" style="animation-delay: 0.6s;">
+        <div class="relative bg-white/95 backdrop-blur-md rounded-3xl p-8 shadow-2xl">
           <div class="flex items-center gap-3 mb-6">
             <div class="w-10 h-10 bg-[#008751]/10 rounded-xl flex items-center justify-center">
               <svg class="w-5 h-5 text-[#008751]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,7 +145,7 @@
               </div>
             </div>
 
-            <button type="submit" class="w-full py-4 bg-[#008751] text-white font-bold rounded-xl hover:bg-[#006B40] transition-all duration-300 flex items-center justify-center gap-2 group">
+            <button type="submit" class="w-full py-4 bg-[#008751] text-white font-bold rounded-xl hover:bg-[#006B40] transition-all duration-300 flex items-center justify-center gap-2 group shadow-lg shadow-[#008751]/25">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
               </svg>
@@ -132,10 +158,10 @@
   </div>
 
   <!-- Scroll Indicator -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40">
+  <div class="absolute bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/50 animate-bounce-slow">
     <span class="text-xs font-medium tracking-widest uppercase">Scroll</span>
-    <div class="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2">
-      <div class="w-1.5 h-3 bg-white/40 rounded-full animate-bounce"></div>
+    <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
+      <div class="w-1.5 h-3 bg-white/50 rounded-full animate-scroll-down"></div>
     </div>
   </div>
 </section>
@@ -148,7 +174,7 @@
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-16">
       <div>
         <span class="text-[#008751] font-semibold text-sm tracking-wide uppercase">Explore Nigeria</span>
-        <h2 class="text-4xl md:text-5xl font-bold text-[#0D0D0D] mt-2">Popular Locations</h2>
+        <h2 class="text-4xl md:text-5xl font-bold text-[#1A1A1A] mt-2">Popular Locations</h2>
       </div>
       <%= link_to properties_path, class: "inline-flex items-center gap-2 text-[#008751] font-semibold hover:gap-3 transition-all" do %>
         View All Cities
@@ -161,11 +187,11 @@
     <!-- Locations Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Lagos - Featured -->
-      <div class="lg:col-span-2 lg:row-span-2 group relative rounded-3xl overflow-hidden">
+      <div class="lg:col-span-2 lg:row-span-2 group relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-500">
         <div class="aspect-[4/3] lg:aspect-auto lg:h-full">
           <img src="https://images.unsplash.com/photo-1618828665011-0abd973f7bb8?w=800&h=900&fit=crop" alt="Lagos" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
         </div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
         <div class="absolute bottom-0 left-0 right-0 p-8">
           <div class="flex items-center gap-2 mb-3">
             <span class="px-3 py-1 bg-[#008751] text-white text-xs font-bold rounded-full">Most Popular</span>
@@ -185,7 +211,7 @@
       </div>
 
       <!-- Abuja -->
-      <div class="group relative rounded-3xl overflow-hidden">
+      <div class="group relative rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500">
         <div class="aspect-[4/3]">
           <img src="https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=600&h=450&fit=crop" alt="Abuja" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
         </div>
@@ -197,7 +223,7 @@
       </div>
 
       <!-- Port Harcourt -->
-      <div class="group relative rounded-3xl overflow-hidden">
+      <div class="group relative rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500">
         <div class="aspect-[4/3]">
           <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=450&fit=crop" alt="Port Harcourt" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
         </div>
@@ -209,7 +235,7 @@
       </div>
 
       <!-- Ibadan -->
-      <div class="group relative rounded-3xl overflow-hidden">
+      <div class="group relative rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500">
         <div class="aspect-[4/3]">
           <img src="https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=600&h=450&fit=crop" alt="Ibadan" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
         </div>
@@ -221,7 +247,7 @@
       </div>
 
       <!-- Kano -->
-      <div class="group relative rounded-3xl overflow-hidden">
+      <div class="group relative rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500">
         <div class="aspect-[4/3]">
           <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=450&fit=crop" alt="Kano" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
         </div>
@@ -237,55 +263,55 @@
 
 
 <!-- How It Works Section -->
-<section class="py-24 bg-gray-50">
+<section class="py-24 bg-[#FAFAF9]">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
     <!-- Header -->
     <div class="text-center max-w-3xl mx-auto mb-20">
       <span class="text-[#008751] font-semibold text-sm tracking-wide uppercase">Simple Process</span>
-      <h2 class="text-4xl md:text-5xl font-bold text-[#0D0D0D] mt-2 mb-4">How It Works</h2>
+      <h2 class="text-4xl md:text-5xl font-bold text-[#1A1A1A] mt-2 mb-4">How It Works</h2>
       <p class="text-xl text-gray-600">Find your perfect home in three simple steps</p>
     </div>
 
     <!-- Steps -->
     <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
       <!-- Step 1 -->
-      <div class="relative">
-        <div class="text-8xl font-black text-[#008751]/10 absolute -top-4 -left-2">01</div>
+      <div class="relative group">
+        <div class="text-8xl font-black text-[#008751]/10 absolute -top-4 -left-2 group-hover:text-[#008751]/20 transition-colors duration-500">01</div>
         <div class="relative pt-12">
-          <div class="w-16 h-16 bg-[#008751] rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-[#008751]/25">
+          <div class="w-16 h-16 bg-[#008751] rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-[#008751]/25 group-hover:scale-110 transition-transform duration-300">
             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
           </div>
-          <h3 class="text-2xl font-bold text-[#0D0D0D] mb-3">Search & Discover</h3>
+          <h3 class="text-2xl font-bold text-[#1A1A1A] mb-3">Search & Discover</h3>
           <p class="text-gray-600 leading-relaxed">Browse thousands of verified properties across Nigeria. Filter by location, price, and amenities to find your ideal home.</p>
         </div>
       </div>
 
       <!-- Step 2 -->
-      <div class="relative">
-        <div class="text-8xl font-black text-[#008751]/10 absolute -top-4 -left-2">02</div>
+      <div class="relative group">
+        <div class="text-8xl font-black text-[#008751]/10 absolute -top-4 -left-2 group-hover:text-[#008751]/20 transition-colors duration-500">02</div>
         <div class="relative pt-12">
-          <div class="w-16 h-16 bg-[#0D0D0D] rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-black/25">
+          <div class="w-16 h-16 bg-[#1A1A1A] rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-black/25 group-hover:scale-110 transition-transform duration-300">
             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
             </svg>
           </div>
-          <h3 class="text-2xl font-bold text-[#0D0D0D] mb-3">Connect Directly</h3>
+          <h3 class="text-2xl font-bold text-[#1A1A1A] mb-3">Connect Directly</h3>
           <p class="text-gray-600 leading-relaxed">Contact landlords and agents directly through our platform. Schedule viewings and ask questions in real-time.</p>
         </div>
       </div>
 
       <!-- Step 3 -->
-      <div class="relative">
-        <div class="text-8xl font-black text-[#008751]/10 absolute -top-4 -left-2">03</div>
+      <div class="relative group">
+        <div class="text-8xl font-black text-[#008751]/10 absolute -top-4 -left-2 group-hover:text-[#008751]/20 transition-colors duration-500">03</div>
         <div class="relative pt-12">
-          <div class="w-16 h-16 bg-[#E85D04] rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-[#E85D04]/25">
+          <div class="w-16 h-16 bg-[#E85D04] rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-[#E85D04]/25 group-hover:scale-110 transition-transform duration-300">
             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
             </svg>
           </div>
-          <h3 class="text-2xl font-bold text-[#0D0D0D] mb-3">Move In</h3>
+          <h3 class="text-2xl font-bold text-[#1A1A1A] mb-3">Move In</h3>
           <p class="text-gray-600 leading-relaxed">Complete your rental agreement securely and move into your new home. We're here to support you every step of the way.</p>
         </div>
       </div>
@@ -300,7 +326,7 @@
     <!-- Header -->
     <div class="text-center max-w-3xl mx-auto mb-16">
       <span class="text-[#008751] font-semibold text-sm tracking-wide uppercase">Browse By Type</span>
-      <h2 class="text-4xl md:text-5xl font-bold text-[#0D0D0D] mt-2 mb-4">Property Categories</h2>
+      <h2 class="text-4xl md:text-5xl font-bold text-[#1A1A1A] mt-2 mb-4">Property Categories</h2>
       <p class="text-xl text-gray-600">Choose from various property types to suit your lifestyle</p>
     </div>
 
@@ -314,9 +340,9 @@
         { name: "Offices", icon: "🏛️", count: "280+", type: "office" },
         { name: "Shops", icon: "🏪", count: "200+", type: "shop" }
       ].each do |property| %>
-        <%= link_to properties_path(property_type: property[:type]), class: "group p-6 bg-gray-50 rounded-2xl hover:bg-[#008751] transition-all duration-300 text-center" do %>
+        <%= link_to properties_path(property_type: property[:type]), class: "group p-6 bg-[#FAFAF9] rounded-2xl hover:bg-[#008751] transition-all duration-300 text-center hover:shadow-lg hover:-translate-y-1" do %>
           <div class="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300"><%= property[:icon] %></div>
-          <h3 class="font-bold text-[#0D0D0D] group-hover:text-white mb-1 transition-colors"><%= property[:name] %></h3>
+          <h3 class="font-bold text-[#1A1A1A] group-hover:text-white mb-1 transition-colors"><%= property[:name] %></h3>
           <p class="text-sm text-gray-500 group-hover:text-white/70 transition-colors"><%= property[:count] %></p>
         <% end %>
       <% end %>
@@ -326,7 +352,7 @@
 
 
 <!-- Features Section -->
-<section class="py-24 bg-[#0D0D0D]">
+<section class="py-24 bg-[#1A1A1A]">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
     <div class="grid lg:grid-cols-2 gap-16 items-center">
       <!-- Left: Content -->
@@ -336,8 +362,8 @@
         <p class="text-xl text-white/60 mb-10">We've built the most comprehensive rental platform in Nigeria, designed to make your housing search effortless.</p>
 
         <div class="space-y-6">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-[#008751]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+          <div class="flex items-start gap-4 group">
+            <div class="w-12 h-12 bg-[#008751]/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#008751]/30 transition-colors">
               <svg class="w-6 h-6 text-[#008751]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
@@ -348,8 +374,8 @@
             </div>
           </div>
 
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-[#008751]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+          <div class="flex items-start gap-4 group">
+            <div class="w-12 h-12 bg-[#008751]/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#008751]/30 transition-colors">
               <svg class="w-6 h-6 text-[#008751]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
               </svg>
@@ -360,8 +386,8 @@
             </div>
           </div>
 
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-[#E85D04]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+          <div class="flex items-start gap-4 group">
+            <div class="w-12 h-12 bg-[#E85D04]/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#E85D04]/30 transition-colors">
               <svg class="w-6 h-6 text-[#E85D04]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
               </svg>
@@ -376,19 +402,19 @@
 
       <!-- Right: Stats Cards -->
       <div class="grid grid-cols-2 gap-4">
-        <div class="p-8 bg-white/5 border border-white/10 rounded-2xl">
+        <div class="p-8 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
           <div class="text-4xl font-black text-white mb-2">98%</div>
           <p class="text-white/50">Customer Satisfaction</p>
         </div>
-        <div class="p-8 bg-[#008751] rounded-2xl">
+        <div class="p-8 bg-[#008751] rounded-2xl shadow-lg shadow-[#008751]/25">
           <div class="text-4xl font-black text-white mb-2">24/7</div>
           <p class="text-white/70">Support Available</p>
         </div>
-        <div class="p-8 bg-white rounded-2xl">
-          <div class="text-4xl font-black text-[#0D0D0D] mb-2">5K+</div>
+        <div class="p-8 bg-white rounded-2xl shadow-lg">
+          <div class="text-4xl font-black text-[#1A1A1A] mb-2">5K+</div>
           <p class="text-gray-600">Active Listings</p>
         </div>
-        <div class="p-8 bg-white/5 border border-white/10 rounded-2xl">
+        <div class="p-8 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
           <div class="text-4xl font-black text-[#008751] mb-2">₦0</div>
           <p class="text-white/50">Platform Fees</p>
         </div>
@@ -399,17 +425,17 @@
 
 
 <!-- Testimonials Section -->
-<section class="py-24 bg-gray-50">
+<section class="py-24 bg-[#FAFAF9]">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
     <!-- Header -->
     <div class="text-center max-w-3xl mx-auto mb-16">
       <span class="text-[#008751] font-semibold text-sm tracking-wide uppercase">Testimonials</span>
-      <h2 class="text-4xl md:text-5xl font-bold text-[#0D0D0D] mt-2 mb-4">What Our Users Say</h2>
+      <h2 class="text-4xl md:text-5xl font-bold text-[#1A1A1A] mt-2 mb-4">What Our Users Say</h2>
     </div>
 
     <!-- Testimonials Grid -->
     <div class="grid md:grid-cols-3 gap-8">
-      <div class="bg-white p-8 rounded-2xl border border-gray-100">
+      <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300">
         <div class="flex gap-1 mb-4">
           <% 5.times do %>
             <svg class="w-5 h-5 text-[#E85D04]" fill="currentColor" viewBox="0 0 20 20">
@@ -421,13 +447,13 @@
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 bg-[#008751] rounded-full flex items-center justify-center text-white font-bold">AC</div>
           <div>
-            <p class="font-bold text-[#0D0D0D]">Adaeze Chukwu</p>
+            <p class="font-bold text-[#1A1A1A]">Adaeze Chukwu</p>
             <p class="text-sm text-gray-500">Tenant, Lagos</p>
           </div>
         </div>
       </div>
 
-      <div class="bg-white p-8 rounded-2xl border border-gray-100">
+      <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300">
         <div class="flex gap-1 mb-4">
           <% 5.times do %>
             <svg class="w-5 h-5 text-[#E85D04]" fill="currentColor" viewBox="0 0 20 20">
@@ -437,15 +463,15 @@
         </div>
         <p class="text-gray-600 mb-6 leading-relaxed">"As a landlord, NaijaRent has transformed how I manage my properties. The lead management dashboard is excellent!"</p>
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 bg-[#0D0D0D] rounded-full flex items-center justify-center text-white font-bold">OB</div>
+          <div class="w-12 h-12 bg-[#1A1A1A] rounded-full flex items-center justify-center text-white font-bold">OB</div>
           <div>
-            <p class="font-bold text-[#0D0D0D]">Oluwaseun Bakare</p>
+            <p class="font-bold text-[#1A1A1A]">Oluwaseun Bakare</p>
             <p class="text-sm text-gray-500">Landlord, Abuja</p>
           </div>
         </div>
       </div>
 
-      <div class="bg-white p-8 rounded-2xl border border-gray-100">
+      <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300">
         <div class="flex gap-1 mb-4">
           <% 5.times do %>
             <svg class="w-5 h-5 text-[#E85D04]" fill="currentColor" viewBox="0 0 20 20">
@@ -457,7 +483,7 @@
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 bg-[#E85D04] rounded-full flex items-center justify-center text-white font-bold">NI</div>
           <div>
-            <p class="font-bold text-[#0D0D0D]">Ngozi Ibrahim</p>
+            <p class="font-bold text-[#1A1A1A]">Ngozi Ibrahim</p>
             <p class="text-sm text-gray-500">Agent, Port Harcourt</p>
           </div>
         </div>
@@ -468,13 +494,13 @@
 
 
 <!-- CTA Section -->
-<section class="py-24 bg-[#008751]">
+<section class="py-24 bg-gradient-to-br from-[#008751] to-[#006B40]">
   <div class="max-w-5xl mx-auto px-6 lg:px-8 text-center">
     <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Ready To Find Your Perfect Home?</h2>
     <p class="text-xl text-white/80 mb-10 max-w-2xl mx-auto">Join thousands of Nigerians who have found their dream homes through NaijaRent.</p>
     
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <%= link_to properties_path, class: "inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-[#008751] font-bold rounded-xl hover:bg-gray-100 transition-all duration-300" do %>
+      <%= link_to properties_path, class: "inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-[#008751] font-bold rounded-xl hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-lg" do %>
         Browse Properties
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -489,3 +515,97 @@
     </div>
   </div>
 </section>
+
+<!-- Hero Slider Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const slides = document.querySelectorAll('[data-hero-slider-target="slide"]');
+  const indicators = document.querySelectorAll('[data-hero-slider-target="indicator"]');
+  let currentSlide = 0;
+  const totalSlides = slides.length;
+  
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      if (i === index) {
+        slide.classList.remove('opacity-0');
+        slide.classList.add('opacity-100');
+      } else {
+        slide.classList.remove('opacity-100');
+        slide.classList.add('opacity-0');
+      }
+    });
+    
+    indicators.forEach((indicator, i) => {
+      if (i === index) {
+        indicator.classList.remove('w-8', 'bg-white/30');
+        indicator.classList.add('w-12', 'bg-white/80');
+      } else {
+        indicator.classList.remove('w-12', 'bg-white/80');
+        indicator.classList.add('w-8', 'bg-white/30');
+      }
+    });
+  }
+  
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    showSlide(currentSlide);
+  }
+  
+  // Auto advance slides every 5 seconds
+  setInterval(nextSlide, 5000);
+  
+  // Click handlers for indicators
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => {
+      currentSlide = index;
+      showSlide(currentSlide);
+    });
+  });
+});
+</script>
+
+<style>
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scroll-down {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0) translateX(-50%);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-50%);
+  }
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-scroll-down {
+  animation: scroll-down 2s ease-in-out infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s ease-in-out infinite;
+}
+</style>

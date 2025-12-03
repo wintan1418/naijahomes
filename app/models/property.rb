@@ -20,6 +20,11 @@ class Property < ApplicationRecord
     office: 7 
   }
   enum :status, { available: 0, rented: 1, inactive: 2 }, default: :available
+  enum :listing_type, { 
+    rent: 0, 
+    sale: 1, 
+    shortlet: 2 
+  }, default: :rent
   
   # Validations
   validates :title, presence: true, length: { maximum: 200 }
@@ -34,6 +39,7 @@ class Property < ApplicationRecord
   validates :city, presence: true
   validates :address, presence: true
   validates :status, presence: true
+  validates :listing_type, presence: true
   validate :image_type
   validate :image_size
   

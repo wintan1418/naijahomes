@@ -43,7 +43,7 @@
             <% if user_signed_in? %>
               <!-- User Dropdown -->
               <div class="relative" data-controller="dropdown">
-                <button data-action="click->dropdown#toggle" class="flex items-center gap-3 px-4 py-2 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
+                <button data-action="click->dropdown#toggle" class="user-dropdown-btn flex items-center gap-3 px-4 py-2 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
                   <div class="w-8 h-8 bg-[#008751] rounded-lg flex items-center justify-center text-white text-sm font-bold">
                     <%= current_user.first_name&.first&.upcase || current_user.email.first.upcase %>
                   </div>
@@ -54,7 +54,7 @@
                 </button>
 
                 <!-- Dropdown Menu -->
-                <div data-dropdown-target="menu" class="hidden absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 overflow-hidden">
+                <div data-dropdown-target="menu" class="invisible opacity-0 scale-95 absolute right-0 top-full mt-2 w-64 md:w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 overflow-hidden transition-all duration-200 transform origin-top-right z-50">
                   <div class="px-4 py-3 border-b border-gray-100">
                     <p class="font-bold text-[#0D0D0D]"><%= current_user.full_name.presence || current_user.email %></p>
                     <p class="text-sm text-gray-500 capitalize"><%= current_user.role %></p>
@@ -68,14 +68,14 @@
                   <% end %>
 
                   <% if current_user.landlord? || current_user.agent? %>
-                    <%= link_to landlord_dashboard_path, class: "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors" do %>
+                    <%= link_to landlord_root_path, class: "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors" do %>
                       <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
                       </svg>
                       <span class="text-sm text-gray-700">Dashboard</span>
                     <% end %>
 
-                    <%= link_to new_property_path, class: "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors" do %>
+                    <%= link_to new_landlord_property_path, class: "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors" do %>
                       <svg class="w-5 h-5 text-[#008751]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                       </svg>
@@ -237,13 +237,15 @@
       </div>
     </footer>
 
-    <!-- Stimulus Controllers for Navbar & Dropdown -->
+    <!-- Navbar & Dropdown Scripts -->
     <script>
-      // Simple navbar scroll behavior
-      document.addEventListener('DOMContentLoaded', function() {
+      function initNavbar() {
         const navbar = document.querySelector('nav');
         const logo = document.querySelector('[data-navbar-target="logo"]');
         const links = document.querySelectorAll('[data-navbar-target="link"]');
+        const userBtn = document.querySelector('.user-dropdown-btn');
+        
+        if (!navbar) return;
         
         function updateNavbar() {
           const isHome = window.location.pathname === '/' || window.location.pathname === '';
@@ -252,35 +254,68 @@
           if (isHome && !scrolled) {
             navbar.classList.remove('bg-white', 'shadow-lg');
             navbar.classList.add('bg-transparent');
-            if (logo) logo.classList.remove('!text-[#0D0D0D]');
+            if (logo) logo.classList.remove('!text-[#1A1A1A]');
+            if (userBtn) userBtn.classList.remove('!bg-gray-100', '!text-[#1A1A1A]');
             links.forEach(l => l.classList.remove('!text-gray-600'));
           } else {
             navbar.classList.add('bg-white', 'shadow-lg');
             navbar.classList.remove('bg-transparent');
-            if (logo) logo.classList.add('!text-[#0D0D0D]');
+            if (logo) logo.classList.add('!text-[#1A1A1A]');
+            if (userBtn) userBtn.classList.add('!bg-gray-100', '!text-[#1A1A1A]');
             links.forEach(l => l.classList.add('!text-gray-600'));
           }
         }
         
         updateNavbar();
+        window.removeEventListener('scroll', updateNavbar);
         window.addEventListener('scroll', updateNavbar);
-      });
+      }
 
-      // Simple dropdown toggle
-      document.querySelectorAll('[data-controller="dropdown"]').forEach(dropdown => {
-        const button = dropdown.querySelector('[data-action="click->dropdown#toggle"]');
-        const menu = dropdown.querySelector('[data-dropdown-target="menu"]');
-        
-        if (button && menu) {
-          button.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menu.classList.toggle('hidden');
-          });
+      function initDropdowns() {
+        document.querySelectorAll('[data-controller="dropdown"]').forEach(dropdown => {
+          const button = dropdown.querySelector('[data-action="click->dropdown#toggle"]');
+          const menu = dropdown.querySelector('[data-dropdown-target="menu"]');
           
-          document.addEventListener('click', () => {
+          if (button && menu) {
+            // Remove old listeners by cloning
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            newButton.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              menu.classList.toggle('hidden');
+            });
+          }
+        });
+        
+        // Close dropdowns when clicking outside
+        document.removeEventListener('click', closeDropdowns);
+        document.addEventListener('click', closeDropdowns);
+      }
+      
+      function closeDropdowns(e) {
+        document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
+          if (!menu.closest('[data-controller="dropdown"]').contains(e.target)) {
             menu.classList.add('hidden');
-          });
-        }
+          }
+        });
+      }
+
+      // Initialize on page load and Turbo navigation
+      document.addEventListener('DOMContentLoaded', () => {
+        initNavbar();
+        initDropdowns();
+      });
+      
+      document.addEventListener('turbo:load', () => {
+        initNavbar();
+        initDropdowns();
+      });
+      
+      document.addEventListener('turbo:render', () => {
+        initNavbar();
+        initDropdowns();
       });
     </script>
   </body>

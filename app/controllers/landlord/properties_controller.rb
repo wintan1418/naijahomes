@@ -59,7 +59,7 @@ class Landlord::PropertiesController < ApplicationController
   
   def property_params
     params.require(:property).permit(
-      :title, :description, :price, :payment_frequency, :property_type,
+      :title, :description, :price, :payment_frequency, :property_type, :listing_type,
       :bedrooms, :bathrooms, :toilets, :size, :state, :city, :lga, 
       :address, :latitude, :longitude, :status, :featured, images: []
     )
