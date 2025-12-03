@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  property: one
+  assigned_to: one
+  name: MyString
+  email: MyString
+  phone: MyString
+  message: MyText
+  source: MyString
+  status: 1
+  follow_up_at: 2025-12-03 00:02:04
+
+two:
+  property: two
+  assigned_to: two
+  name: MyString
+  email: MyString
+  phone: MyString
+  message: MyText
+  source: MyString
+  status: 1
+  follow_up_at: 2025-12-03 00:02:04
