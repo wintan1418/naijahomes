@@ -3,7 +3,7 @@ class LeadsController < ApplicationController
   
   def create
     @lead = @property.leads.build(lead_params)
-    @lead.user = current_user if user_signed_in?
+    @lead.source = 'website' # Set source to website for form submissions
     
     if @lead.save
       # Notify property owner

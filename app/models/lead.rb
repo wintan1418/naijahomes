@@ -23,6 +23,7 @@ class Lead < ApplicationRecord
   
   # Scopes
   scope :recent, -> { order(created_at: :desc) }
+  scope :new_leads, -> { where(status: :new_lead) }
   scope :by_status, ->(status) { where(status: status) if status.present? }
   scope :needs_follow_up, -> { where('follow_up_at <= ?', Time.current).where.not(status: [:closed_won, :closed_lost]) }
   scope :for_user, ->(user) { joins(:property).where(property: { user_id: user.id }) }

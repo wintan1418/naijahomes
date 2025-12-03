@@ -28,6 +28,7 @@ class User < ApplicationRecord
   end
   
   alias_method :name, :full_name
+  alias_method :phone, :phone_number
   
   def landlord_or_agent?
     landlord? || agent?

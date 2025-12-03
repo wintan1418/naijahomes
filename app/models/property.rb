@@ -40,6 +40,8 @@ class Property < ApplicationRecord
   # Scopes
   scope :active, -> { where(status: [:available, :rented]) }
   scope :available_only, -> { where(status: :available) }
+  scope :rented_only, -> { where(status: :rented) }
+  scope :recent, -> { order(created_at: :desc) }
   scope :featured_first, -> { order(featured: :desc, created_at: :desc) }
   scope :by_state, ->(state) { where(state: state) if state.present? }
   scope :by_city, ->(city) { where("LOWER(city) LIKE ?", "%#{city.downcase}%") if city.present? }
@@ -60,6 +62,8 @@ class Property < ApplicationRecord
   def price_display
     "₦#{price.to_s.gsub(/(\d)(?=(\d\d\d)+(?!\d))/, '\\1,')}"
   end
+  
+  alias_method :formatted_price, :price_display
   
   def payment_text
     case payment_frequency
