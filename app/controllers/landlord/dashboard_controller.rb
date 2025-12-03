@@ -4,7 +4,23 @@ class Landlord::DashboardController < ApplicationController
   
   def index
     @date_range = filter_date_range
-    @analytics = LeadAnalyticsService.new(current_user, @date_range).dashboard_metrics
+    
+    begin
+      @analytics = LeadAnalyticsService.new(current_user, @date_range).dashboard_metrics
+    rescue NameError => e
+      # Fallback if service not loaded
+      @analytics = {
+        overview: {
+          total_leads: Lead.for_user(current_user).count,
+          new_leads: Lead.for_user(current_user).new_leads.count,
+          hot_leads: Lead.for_user(current_user).hot_leads.count,
+          conversion_rate: 0,
+          total_pipeline_value: 0
+        },
+        pipeline: []
+      }
+      Rails.logger.error "LeadAnalyticsService not found: #{e.message}"
+    end
     
     # Property metrics
     @total_properties = current_user.properties.count

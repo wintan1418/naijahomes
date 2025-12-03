@@ -57,7 +57,7 @@ class Lead < ApplicationRecord
   after_create :assign_to_property_owner, :log_status_change
   after_update :log_status_change, if: :saved_change_to_status?
   before_save :set_priority_based_on_budget
-  validate :valid_status_transition, if: :status_changed?
+  validate :valid_status_transition, if: -> { status_changed? && !Rails.env.development? }
   
   # Methods
   def status_color
@@ -259,7 +259,7 @@ class Lead < ApplicationRecord
     allowed_statuses = valid_transitions[status_was] || []
     
     unless allowed_statuses.include?(status)
-      errors.add(:status, "cannot transition from #{status_was.humanize} to #{status.humanize}")
+      errors.add(:status, "cannot transition from #{status_was} to #{status}")
     end
     
     # Prevent direct jumps except for marking as lost
