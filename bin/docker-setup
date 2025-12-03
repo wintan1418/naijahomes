@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -e
+
+echo "🚀 Setting up NaijaRent with Docker..."
+
+# Check if Docker is running
+if ! docker info > /dev/null 2>&1; then
+  echo "❌ Docker is not running. Please start Docker and try again."
+  exit 1
+fi
+
+# Copy .env.example to .env if it doesn't exist
+if [ ! -f .env ]; then
+  cp .env.example .env
+  echo "✅ Created .env file from .env.example"
+fi
+
+# Build the Docker images
+echo "🔨 Building Docker images..."
+docker-compose build
+
+# Start the database and redis services
+echo "🗄️  Starting database and Redis..."
+docker-compose up -d db redis
+
+# Wait for database to be ready
+echo "⏳ Waiting for database to be ready..."
+docker-compose run --rm web bash -c "until pg_isready -h db -U naija_rentals; do sleep 2; done"
+
+# Create and setup the database
+echo "📊 Setting up database..."
+docker-compose run --rm web rails db:create
+docker-compose run --rm web rails db:migrate
+
+# Install dependencies
+echo "📦 Installing dependencies..."
+docker-compose run --rm web bundle install
+docker-compose run --rm web yarn install
+
+# Start all services
+echo "🚀 Starting all services..."
+docker-compose up -d
+
+# Start asset compilation services
+echo "🎨 Starting asset compilation..."
+docker-compose --profile assets up -d
+
+echo "✅ Setup complete!"
+echo ""
+echo "🌐 NaijaRent is now running at: http://localhost:3000"
+echo ""
+echo "📝 Useful commands:"
+echo "  docker-compose up          # Start all services"
+echo "  docker-compose down        # Stop all services"
+echo "  docker-compose logs -f web # View Rails logs"
+echo "  docker-compose exec web bash # Access Rails console"
+echo "  docker-compose exec web rails console # Rails console"
+echo "  docker-compose exec web rails db:migrate # Run migrations"
