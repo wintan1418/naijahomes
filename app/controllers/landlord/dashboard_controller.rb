@@ -3,20 +3,28 @@ class Landlord::DashboardController < ApplicationController
   before_action :ensure_landlord_or_agent
   
   def index
+    @date_range = filter_date_range
+    @analytics = LeadAnalyticsService.new(current_user, @date_range).dashboard_metrics
+    
+    # Property metrics
     @total_properties = current_user.properties.count
-    @available_properties = current_user.properties.available_only.count
-    @rented_properties = current_user.properties.rented_only.count
+    @available_properties = current_user.properties.available.count
+    @rented_properties = current_user.properties.rented.count
     
-    @recent_leads = current_user.leads.recent.limit(5).includes(:property)
-    @total_leads = current_user.leads.count
-    @new_leads = current_user.leads.new_leads.count
+    # Recent activity
+    @recent_leads = Lead.for_user(current_user)
+                       .recent
+                       .includes(:property, :lead_notes)
+                       .limit(5)
     
-    @recent_properties = current_user.properties.includes(:images_attachments).recent.limit(6)
+    @recent_properties = current_user.properties
+                                   .recent
+                                   .includes(:images_attachments)
+                                   .limit(6)
     
-    # Monthly leads chart data
-    @monthly_leads_data = current_user.leads
-                                     .group_by_month(:created_at, last: 6)
-                                     .count
+    # Quick stats for compatibility
+    @total_leads = Lead.for_user(current_user).count
+    @new_leads = Lead.for_user(current_user).new_leads.count
     
     # Properties by status
     @properties_by_status = current_user.properties.group(:status).count
@@ -24,9 +32,26 @@ class Landlord::DashboardController < ApplicationController
   
   private
   
+  def filter_date_range
+    case params[:period]
+    when 'this_week'
+      1.week.ago..Time.current
+    when 'this_month'
+      1.month.ago..Time.current
+    when 'last_month'
+      2.months.ago..1.month.ago
+    when 'last_3_months'
+      3.months.ago..Time.current
+    when 'this_year'
+      1.year.ago..Time.current
+    else
+      1.month.ago..Time.current
+    end
+  end
+  
   def ensure_landlord_or_agent
-    unless current_user.landlord_or_agent? || current_user.admin?
-      redirect_to root_path, alert: 'You are not authorized to access this page.'
+    unless current_user.can_manage_properties?
+      redirect_to root_path, alert: 'Access denied. This area is for property managers only.'
     end
   end
 end

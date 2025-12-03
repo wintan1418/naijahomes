@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_03_060220) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_03_224922) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,13 +52,27 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_03_060220) do
     t.index ["user_id"], name: "index_favourites_on_user_id"
   end
 
+  create_table "lead_activities", force: :cascade do |t|
+    t.bigint "lead_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "activity_type"
+    t.text "description"
+    t.json "details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lead_id"], name: "index_lead_activities_on_lead_id"
+    t.index ["user_id"], name: "index_lead_activities_on_user_id"
+  end
+
   create_table "lead_notes", force: :cascade do |t|
     t.bigint "lead_id", null: false
     t.bigint "user_id", null: false
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "note_type", default: 0
     t.index ["lead_id"], name: "index_lead_notes_on_lead_id"
+    t.index ["note_type"], name: "index_lead_notes_on_note_type"
     t.index ["user_id"], name: "index_lead_notes_on_user_id"
   end
 
@@ -74,6 +88,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_03_060220) do
     t.datetime "follow_up_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "priority"
+    t.integer "lead_source"
+    t.decimal "budget"
+    t.text "lost_reason"
     t.index ["assigned_to_id"], name: "index_leads_on_assigned_to_id"
     t.index ["created_at"], name: "index_leads_on_created_at"
     t.index ["property_id"], name: "index_leads_on_property_id"
@@ -134,6 +152,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_03_060220) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "favourites", "properties"
   add_foreign_key "favourites", "users"
+  add_foreign_key "lead_activities", "leads"
+  add_foreign_key "lead_activities", "users"
   add_foreign_key "lead_notes", "leads"
   add_foreign_key "lead_notes", "users"
   add_foreign_key "leads", "properties"

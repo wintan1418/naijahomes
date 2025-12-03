@@ -1,211 +1,311 @@
-<div class="min-h-screen bg-gray-50">
-  <!-- Dashboard Header -->
-  <div class="bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold text-gray-900">Landlord Dashboard</h1>
-        <%= link_to "Add Property", new_landlord_property_path, class: "btn-primary" %>
-      </div>
-    </div>
+<!-- Landlord Dashboard - NaijaRent Premium -->
+
+<!-- Dashboard Header -->
+<section class="relative bg-[#0A0A0A] pt-24 pb-12 overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-amber-500/10 to-orange-600/5 blur-[100px]"></div>
+    <div class="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-gradient-to-br from-emerald-600/10 to-teal-500/5 blur-[80px]"></div>
   </div>
 
-  <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-    <!-- Stats Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div>
+        <p class="text-amber-400 font-medium mb-2">Welcome back, <%= current_user.first_name %> 👋</p>
+        <h1 class="text-3xl md:text-4xl font-black text-white">Landlord Dashboard</h1>
+      </div>
+      <%= link_to new_landlord_property_path, class: "inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all" do %>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Add Property
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Dashboard Content -->
+<section class="bg-[#FAFAF9] py-12">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-12">
       <!-- Total Properties -->
-      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-600">
-        <div class="flex items-center">
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600">Total Properties</p>
-            <p class="text-3xl font-bold text-gray-900 mt-2"><%= @total_properties %></p>
-          </div>
-          <div class="p-3 bg-green-100 rounded-full">
-            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/25">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
             </svg>
           </div>
         </div>
-      </div>
-
-      <!-- Available Properties -->
-      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-600">
-        <div class="flex items-center">
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600">Available</p>
-            <p class="text-3xl font-bold text-gray-900 mt-2"><%= @available_properties %></p>
-          </div>
-          <div class="p-3 bg-blue-100 rounded-full">
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Rented Properties -->
-      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-600">
-        <div class="flex items-center">
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600">Rented</p>
-            <p class="text-3xl font-bold text-gray-900 mt-2"><%= @rented_properties %></p>
-          </div>
-          <div class="p-3 bg-yellow-100 rounded-full">
-            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-            </svg>
-          </div>
-        </div>
+        <h3 class="text-3xl font-black text-[#1A1A1A]"><%= @total_properties %></h3>
+        <p class="text-sm text-gray-500 mt-1">Properties</p>
       </div>
 
       <!-- Total Leads -->
-      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-600">
-        <div class="flex items-center">
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600">Total Leads</p>
-            <p class="text-3xl font-bold text-gray-900 mt-2"><%= @total_leads %></p>
-            <% if @new_leads > 0 %>
-              <p class="text-sm text-green-600 mt-1">+<%= @new_leads %> new</p>
-            <% end %>
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/25">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
           </div>
-          <div class="p-3 bg-purple-100 rounded-full">
-            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          <% if @analytics && @analytics[:overview] && @analytics[:overview][:new_leads] > 0 %>
+            <span class="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">+<%= @analytics[:overview][:new_leads] %> new</span>
+          <% end %>
+        </div>
+        <h3 class="text-3xl font-black text-[#1A1A1A]"><%= @analytics&.dig(:overview, :total_leads) || @total_leads %></h3>
+        <p class="text-sm text-gray-500 mt-1">Total Leads</p>
+      </div>
+
+      <!-- Hot Leads -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-red-500/25">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
             </svg>
           </div>
         </div>
+        <h3 class="text-3xl font-black text-[#1A1A1A]"><%= @analytics&.dig(:overview, :hot_leads) || 0 %></h3>
+        <p class="text-sm text-gray-500 mt-1">Hot Leads</p>
+      </div>
+
+      <!-- Conversion Rate -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/25">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+        </div>
+        <h3 class="text-3xl font-black text-[#1A1A1A]"><%= @analytics&.dig(:overview, :conversion_rate) || 0 %>%</h3>
+        <p class="text-sm text-gray-500 mt-1">Conversion</p>
+      </div>
+
+      <!-- Pipeline Value -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+            </svg>
+          </div>
+        </div>
+        <h3 class="text-3xl font-black text-[#1A1A1A]">₦<%= number_with_delimiter(@analytics&.dig(:overview, :total_pipeline_value) || 0) %></h3>
+        <p class="text-sm text-gray-500 mt-1">Pipeline</p>
+      </div>
+
+      <!-- Available Properties -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/25">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+        </div>
+        <h3 class="text-3xl font-black text-[#1A1A1A]"><%= @available_properties %></h3>
+        <p class="text-sm text-gray-500 mt-1">Available</p>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <!-- Recent Leads -->
-      <div class="bg-white rounded-xl shadow-md p-6">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-semibold text-gray-900">Recent Leads</h2>
-          <%= link_to "View All", landlord_leads_path, class: "text-green-600 hover:text-green-700 text-sm font-medium" %>
+    <!-- CRM Pipeline Section -->
+    <% if @analytics && @analytics[:pipeline] && @analytics[:pipeline].any? %>
+      <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden mb-12">
+        <div class="flex items-center justify-between p-6 border-b border-gray-100">
+          <h2 class="text-xl font-bold text-[#1A1A1A]">Lead Pipeline</h2>
+          <%= link_to landlord_leads_path, class: "text-amber-600 hover:text-amber-700 text-sm font-semibold" do %>
+            Manage Pipeline →
+          <% end %>
         </div>
 
-        <% if @recent_leads.any? %>
-          <div class="space-y-4">
-            <% @recent_leads.each do |lead| %>
-              <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                <div class="flex justify-between items-start">
-                  <div class="flex-1">
-                    <h4 class="font-medium text-gray-900"><%= lead.name %></h4>
-                    <p class="text-sm text-gray-600 mt-1">For: <%= link_to lead.property.title, property_path(lead.property), class: "text-green-600 hover:underline" %></p>
-                    <p class="text-sm text-gray-500 mt-1"><%= truncate(lead.message, length: 80) %></p>
-                    <div class="flex items-center space-x-4 mt-2">
-                      <span class="text-xs text-gray-500"><%= lead.created_at.strftime("%b %d, %Y") %></span>
-                      <span class="badge badge-<%= lead.status_color %>"><%= lead.status.humanize %></span>
-                    </div>
-                  </div>
-                  <%= link_to landlord_lead_path(lead), class: "ml-4 text-gray-400 hover:text-gray-600" do %>
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  <% end %>
+        <div class="p-6">
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            <% @analytics[:pipeline].each do |stage| %>
+              <div class="text-center">
+                <div class="w-20 h-20 mx-auto mb-3 rounded-2xl flex items-center justify-center text-2xl font-black text-white
+                  <%= case stage[:status]
+                      when 'New lead' then 'bg-gradient-to-br from-blue-500 to-blue-600'
+                      when 'Contacted' then 'bg-gradient-to-br from-yellow-500 to-orange-500'
+                      when 'Viewing scheduled' then 'bg-gradient-to-br from-purple-500 to-indigo-500'
+                      when 'Offer made' then 'bg-gradient-to-br from-orange-500 to-red-500'
+                      when 'Negotiating' then 'bg-gradient-to-br from-indigo-500 to-purple-600'
+                      when 'Closed won' then 'bg-gradient-to-br from-emerald-500 to-green-600'
+                      when 'Closed lost' then 'bg-gradient-to-br from-gray-500 to-gray-600'
+                      else 'bg-gradient-to-br from-gray-400 to-gray-500'
+                      end %>">
+                  <%= stage[:count] %>
                 </div>
+                <h4 class="font-bold text-sm text-[#1A1A1A] mb-1"><%= stage[:status] %></h4>
+                <p class="text-xs text-gray-500"><%= stage[:percentage] %>% of total</p>
               </div>
             <% end %>
           </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Main Grid -->
+    <div class="grid lg:grid-cols-2 gap-8 mb-12">
+      <!-- Recent Leads -->
+      <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+        <div class="flex items-center justify-between p-6 border-b border-gray-100">
+          <h2 class="text-xl font-bold text-[#1A1A1A]">Recent Leads</h2>
+          <%= link_to landlord_leads_path, class: "text-amber-600 hover:text-amber-700 text-sm font-semibold" do %>
+            View All →
+          <% end %>
+        </div>
+
+        <% if @recent_leads.any? %>
+          <div class="divide-y divide-gray-100">
+            <% @recent_leads.each do |lead| %>
+              <%= link_to landlord_lead_path(lead), class: "block p-5 hover:bg-gray-50 transition-colors" do %>
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center text-sm font-bold text-black">
+                        <%= lead.name.first.upcase %>
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-[#1A1A1A]"><%= lead.name %></h4>
+                        <p class="text-xs text-gray-400"><%= lead.created_at.strftime("%b %d, %Y") %></p>
+                      </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-2">
+                      For: <span class="text-amber-600 font-medium"><%= truncate(lead.property.title, length: 40) %></span>
+                    </p>
+                    <p class="text-sm text-gray-400 line-clamp-1"><%= truncate(lead.message, length: 60) %></p>
+                  </div>
+                  <span class="px-2 py-1 text-xs font-medium rounded-full ml-4
+                    <%= case lead.status 
+                        when 'new' then 'bg-emerald-100 text-emerald-700'
+                        when 'contacted' then 'bg-blue-100 text-blue-700'
+                        when 'viewing_scheduled' then 'bg-purple-100 text-purple-700'
+                        else 'bg-gray-100 text-gray-600'
+                        end %>">
+                    <%= lead.status.humanize %>
+                  </span>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
         <% else %>
-          <div class="text-center py-12">
-            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-            </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No leads yet</h3>
-            <p class="mt-1 text-sm text-gray-500">Leads will appear here when people inquire about your properties.</p>
+          <div class="p-12 text-center">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+              </svg>
+            </div>
+            <h3 class="font-bold text-[#1A1A1A] mb-1">No leads yet</h3>
+            <p class="text-sm text-gray-500">Leads will appear here when people inquire</p>
           </div>
         <% end %>
       </div>
 
-      <!-- Monthly Leads Chart -->
-      <div class="bg-white rounded-xl shadow-md p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-6">Lead Trends</h2>
-        
-        <% if @monthly_leads_data.any? %>
-          <div class="relative h-64">
-            <!-- Simple bar chart representation -->
-            <div class="absolute inset-0 flex items-end justify-between space-x-2">
-              <% max_value = @monthly_leads_data.values.max.to_f %>
+      <!-- Lead Trends -->
+      <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100">
+          <h2 class="text-xl font-bold text-[#1A1A1A]">Lead Trends</h2>
+        </div>
+
+        <% if @monthly_leads_data.present? && @monthly_leads_data.any? %>
+          <div class="p-6">
+            <div class="h-64 flex items-end justify-between gap-2">
+              <% max_value = [@monthly_leads_data.values.max.to_f, 1].max %>
               <% @monthly_leads_data.each do |date, count| %>
                 <div class="flex-1 flex flex-col items-center">
-                  <div class="w-full bg-green-600 rounded-t" style="height: <%= max_value > 0 ? (count / max_value * 100) : 0 %>%"></div>
-                  <span class="text-xs text-gray-600 mt-2 rotate-45 origin-left"><%= date.strftime("%b") %></span>
+                  <div class="w-full bg-gradient-to-t from-amber-500 to-orange-500 rounded-t-lg transition-all hover:from-amber-400 hover:to-orange-400" 
+                       style="height: <%= (count / max_value * 180).to_i %>px; min-height: 8px;"></div>
+                  <span class="text-xs text-gray-400 mt-2 font-medium"><%= date.strftime("%b") %></span>
                 </div>
               <% end %>
             </div>
           </div>
         <% else %>
-          <div class="text-center py-12">
-            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No data yet</h3>
-            <p class="mt-1 text-sm text-gray-500">Lead trends will appear here once you receive inquiries.</p>
+          <div class="p-12 text-center">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <h3 class="font-bold text-[#1A1A1A] mb-1">No data yet</h3>
+            <p class="text-sm text-gray-500">Trends will appear once you receive inquiries</p>
           </div>
         <% end %>
       </div>
     </div>
 
     <!-- Recent Properties -->
-    <div class="mt-8 bg-white rounded-xl shadow-md p-6">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">Recent Properties</h2>
-        <%= link_to "Manage All", landlord_properties_path, class: "text-green-600 hover:text-green-700 text-sm font-medium" %>
+    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      <div class="flex items-center justify-between p-6 border-b border-gray-100">
+        <h2 class="text-xl font-bold text-[#1A1A1A]">Recent Properties</h2>
+        <%= link_to landlord_properties_path, class: "text-amber-600 hover:text-amber-700 text-sm font-semibold" do %>
+          Manage All →
+        <% end %>
       </div>
 
       <% if @recent_properties.any? %>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
           <% @recent_properties.each do |property| %>
-            <div class="property-card">
-              <div class="relative">
+            <div class="bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 group">
+              <div class="relative h-40 bg-gray-200">
                 <% if property.images.attached? %>
-                  <%= image_tag property.images.first, class: "w-full h-48 object-cover" %>
+                  <%= image_tag property.images.first, class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
                 <% else %>
-                  <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                  <div class="w-full h-full flex items-center justify-center">
+                    <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                     </svg>
                   </div>
                 <% end %>
-                <div class="absolute top-2 right-2 flex space-x-2">
-                  <span class="<%= property.available? ? 'badge-success' : 'badge-warning' %>">
+                <div class="absolute top-3 right-3">
+                  <span class="px-2 py-1 text-xs font-bold rounded-full <%= property.available? ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white' %>">
                     <%= property.status.capitalize %>
                   </span>
                 </div>
               </div>
               
               <div class="p-4">
-                <h3 class="font-semibold text-gray-900 text-lg mb-2"><%= property.title %></h3>
-                <p class="text-green-600 font-bold text-lg mb-2"><%= property.full_price_text %></p>
-                <p class="text-gray-600 text-sm mb-3 flex items-center">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <h3 class="font-bold text-[#1A1A1A] mb-1 line-clamp-1"><%= property.title %></h3>
+                <p class="text-lg font-black text-amber-600 mb-1"><%= property.full_price_text %></p>
+                <p class="text-gray-400 text-sm mb-4 flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                   </svg>
                   <%= property.location_text %>
                 </p>
                 
-                <div class="flex justify-between items-center">
-                  <%= link_to "View Details", property_path(property), class: "text-green-600 hover:text-green-700 text-sm font-medium" %>
-                  <%= link_to "Edit", edit_landlord_property_path(property), class: "text-gray-600 hover:text-gray-700 text-sm font-medium" %>
+                <div class="flex gap-2">
+                  <%= link_to property_path(property), class: "flex-1 text-center py-2 px-3 bg-amber-100 text-amber-700 font-semibold rounded-lg text-sm hover:bg-amber-200 transition-colors" do %>
+                    View
+                  <% end %>
+                  <%= link_to edit_landlord_property_path(property), class: "flex-1 text-center py-2 px-3 bg-gray-200 text-gray-700 font-semibold rounded-lg text-sm hover:bg-gray-300 transition-colors" do %>
+                    Edit
+                  <% end %>
                 </div>
               </div>
             </div>
           <% end %>
         </div>
       <% else %>
-        <div class="text-center py-12">
-          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-          </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900">No properties yet</h3>
-          <p class="mt-1 text-sm text-gray-500">Get started by adding your first property.</p>
-          <div class="mt-6">
-            <%= link_to "Add Property", new_landlord_property_path, class: "btn-primary" %>
+        <div class="p-12 text-center">
+          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
           </div>
+          <h3 class="font-bold text-[#1A1A1A] mb-1">No properties yet</h3>
+          <p class="text-sm text-gray-500 mb-6">Get started by adding your first property</p>
+          <%= link_to new_landlord_property_path, class: "inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold rounded-xl" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add Property
+          <% end %>
         </div>
       <% end %>
     </div>
   </div>
-</div>
+</section>

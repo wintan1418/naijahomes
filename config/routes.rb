@@ -20,9 +20,13 @@ Rails.application.routes.draw do
     resources :properties
     resources :leads do
       member do
-        patch :update_status
-        post :add_note
+        patch :advance_status
+        patch :mark_as_lost
       end
+      collection do
+        get :analytics
+      end
+      resources :lead_notes, only: [:create], path: 'notes'
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

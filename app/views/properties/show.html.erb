@@ -1,191 +1,239 @@
-<div class="min-h-screen bg-gray-50">
-  <!-- Property Header -->
-  <div class="bg-white border-b">
-    <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-      <nav class="flex items-center space-x-2 text-sm">
-        <%= link_to "Home", root_path, class: "text-gray-500 hover:text-gray-700" %>
-        <span class="text-gray-400">/</span>
-        <%= link_to "Properties", properties_path, class: "text-gray-500 hover:text-gray-700" %>
-        <span class="text-gray-400">/</span>
-        <span class="text-gray-900 font-medium truncate max-w-xs"><%= @property.title %></span>
-      </nav>
-    </div>
+<!-- Property Detail Page - NaijaRent Premium -->
+
+<!-- Hero Header -->
+<section class="relative bg-[#0A0A0A] pt-24 pb-8">
+  <div class="absolute inset-0">
+    <div class="absolute top-0 right-1/4 w-[400px] h-[400px] rounded-full bg-gradient-to-br from-amber-500/10 to-orange-600/5 blur-[100px]"></div>
   </div>
 
-  <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Main Content -->
-      <div class="lg:col-span-2">
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm mb-6">
+      <%= link_to "Home", root_path, class: "text-white/50 hover:text-white transition-colors" %>
+      <svg class="w-4 h-4 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <%= link_to "Properties", properties_path, class: "text-white/50 hover:text-white transition-colors" %>
+      <svg class="w-4 h-4 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <span class="text-white truncate max-w-[200px]"><%= @property.title %></span>
+    </nav>
+
+    <!-- Property Title & Status -->
+    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <span class="px-3 py-1 <%= @property.available? ? 'bg-emerald-500' : 'bg-amber-500' %> text-white text-xs font-bold rounded-full">
+            <%= @property.status.humanize %>
+          </span>
+          <% if @property.featured? %>
+            <span class="px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-black text-xs font-bold rounded-full">
+              Featured
+            </span>
+          <% end %>
+          <span class="px-3 py-1 bg-white/10 text-white/80 text-xs font-medium rounded-full">
+            <%= @property.property_type.humanize %>
+          </span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-black text-white mb-2"><%= @property.title %></h1>
+        <div class="flex items-center gap-2 text-white/60">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <span><%= @property.address %>, <%= @property.city %>, <%= @property.state %></span>
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div class="text-left lg:text-right">
+        <div class="text-3xl md:text-4xl font-black text-white">
+          <%= @property.formatted_price %>
+        </div>
+        <div class="text-white/60"><%= @property.payment_text %></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<section class="bg-[#FAFAF9] py-12">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="grid lg:grid-cols-3 gap-8">
+      
+      <!-- Left Column - Main Content -->
+      <div class="lg:col-span-2 space-y-8">
+        
         <!-- Image Gallery -->
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <% if @property.images.attached? %>
             <div class="relative">
               <!-- Main Image -->
-              <div class="aspect-w-16 aspect-h-10">
-                <%= image_tag @property.images.first, class: "w-full h-[500px] object-cover", id: "main-image" %>
+              <div class="aspect-video bg-gray-100">
+                <%= image_tag @property.images.first, class: "w-full h-full object-cover", id: "main-image" %>
               </div>
               
-              <!-- Thumbnail Grid -->
+              <!-- Thumbnail Strip -->
               <% if @property.images.count > 1 %>
-                <div class="p-4 grid grid-cols-4 gap-2">
-                  <% @property.images.each_with_index do |image, index| %>
-                    <button onclick="changeImage('<%= url_for(image) %>')" class="relative aspect-w-16 aspect-h-10 rounded-lg overflow-hidden hover:opacity-75 transition-opacity">
-                      <%= image_tag image, class: "w-full h-24 object-cover" %>
-                    </button>
-                  <% end %>
+                <div class="p-4 bg-white border-t border-gray-100">
+                  <div class="flex gap-3 overflow-x-auto pb-2">
+                    <% @property.images.each_with_index do |image, index| %>
+                      <button onclick="changeImage('<%= url_for(image) %>')" 
+                              class="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 border-transparent hover:border-amber-500 transition-all focus:outline-none focus:border-amber-500">
+                        <%= image_tag image, class: "w-full h-full object-cover" %>
+                      </button>
+                    <% end %>
+                  </div>
                 </div>
               <% end %>
             </div>
           <% else %>
-            <div class="aspect-w-16 aspect-h-10 bg-gray-200 flex items-center justify-center">
-              <svg class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-              </svg>
+            <div class="aspect-video bg-gray-100 flex items-center justify-center">
+              <div class="text-center">
+                <svg class="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <p class="text-gray-400">No images available</p>
+              </div>
             </div>
           <% end %>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+            <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+              </svg>
+            </div>
+            <div class="text-2xl font-black text-[#1A1A1A]"><%= @property.bedrooms || 0 %></div>
+            <div class="text-sm text-gray-500">Bedrooms</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+            <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
+              </svg>
+            </div>
+            <div class="text-2xl font-black text-[#1A1A1A]"><%= @property.bathrooms || 0 %></div>
+            <div class="text-sm text-gray-500">Bathrooms</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+            </div>
+            <div class="text-2xl font-black text-[#1A1A1A]"><%= @property.toilets || 0 %></div>
+            <div class="text-sm text-gray-500">Toilets</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+              </svg>
+            </div>
+            <div class="text-2xl font-black text-[#1A1A1A]"><%= @property.size ? number_with_delimiter(@property.size) : 'N/A' %></div>
+            <div class="text-sm text-gray-500">Sqm</div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-8">
+          <h2 class="text-xl font-bold text-[#1A1A1A] mb-6">Description</h2>
+          <div class="prose prose-gray max-w-none">
+            <p class="text-gray-600 leading-relaxed whitespace-pre-line"><%= @property.description %></p>
+          </div>
         </div>
 
         <!-- Property Details -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-          <h1 class="text-3xl font-bold text-gray-900 mb-4"><%= @property.title %></h1>
-          
-          <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center space-x-2 text-gray-600">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              </svg>
-              <span><%= @property.city %>, <%= @property.state %></span>
+        <div class="bg-white rounded-2xl border border-gray-100 p-8">
+          <h2 class="text-xl font-bold text-[#1A1A1A] mb-6">Property Details</h2>
+          <dl class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <dt class="text-gray-500">Property Type</dt>
+              <dd class="font-semibold text-[#1A1A1A]"><%= @property.property_type.humanize %></dd>
             </div>
-            <div class="flex items-center space-x-4">
-              <span class="<%= @property.available? ? 'badge-success' : 'badge-warning' %>">
-                <%= @property.status.capitalize %>
-              </span>
-              <% if @property.featured? %>
-                <span class="badge-primary">Featured</span>
-              <% end %>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <dt class="text-gray-500">Payment</dt>
+              <dd class="font-semibold text-[#1A1A1A]"><%= @property.payment_frequency.humanize %></dd>
             </div>
-          </div>
-
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-            <div class="text-center p-4 bg-gray-50 rounded-xl">
-              <div class="text-3xl font-bold text-green-600 mb-1"><%= @property.bedrooms %></div>
-              <div class="text-sm text-gray-600">Bedrooms</div>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <dt class="text-gray-500">State</dt>
+              <dd class="font-semibold text-[#1A1A1A]"><%= @property.state %></dd>
             </div>
-            <div class="text-center p-4 bg-gray-50 rounded-xl">
-              <div class="text-3xl font-bold text-green-600 mb-1"><%= @property.bathrooms %></div>
-              <div class="text-sm text-gray-600">Bathrooms</div>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <dt class="text-gray-500">City</dt>
+              <dd class="font-semibold text-[#1A1A1A]"><%= @property.city %></dd>
             </div>
-            <div class="text-center p-4 bg-gray-50 rounded-xl">
-              <div class="text-3xl font-bold text-green-600 mb-1"><%= @property.toilets %></div>
-              <div class="text-sm text-gray-600">Toilets</div>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <dt class="text-gray-500">LGA</dt>
+              <dd class="font-semibold text-[#1A1A1A]"><%= @property.lga || "N/A" %></dd>
             </div>
-            <div class="text-center p-4 bg-gray-50 rounded-xl">
-              <div class="text-3xl font-bold text-green-600 mb-1"><%= number_with_delimiter(@property.size) %></div>
-              <div class="text-sm text-gray-600">sqm</div>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <dt class="text-gray-500">Listed</dt>
+              <dd class="font-semibold text-[#1A1A1A]"><%= @property.created_at.strftime("%B %d, %Y") %></dd>
             </div>
-          </div>
-
-          <div class="prose max-w-none">
-            <h3 class="text-xl font-semibold text-gray-900 mb-4">Description</h3>
-            <p class="text-gray-700 leading-relaxed whitespace-pre-line"><%= @property.description %></p>
-          </div>
-
-          <div class="mt-8 pt-8 border-t">
-            <h3 class="text-xl font-semibold text-gray-900 mb-4">Property Details</h3>
-            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="flex justify-between">
-                <dt class="text-gray-600">Property Type:</dt>
-                <dd class="font-medium text-gray-900"><%= @property.property_type.humanize %></dd>
-              </div>
-              <div class="flex justify-between">
-                <dt class="text-gray-600">Local Government Area:</dt>
-                <dd class="font-medium text-gray-900"><%= @property.lga || "N/A" %></dd>
-              </div>
-              <div class="flex justify-between">
-                <dt class="text-gray-600">Address:</dt>
-                <dd class="font-medium text-gray-900"><%= @property.address %></dd>
-              </div>
-              <div class="flex justify-between">
-                <dt class="text-gray-600">Listed on:</dt>
-                <dd class="font-medium text-gray-900"><%= @property.created_at.strftime("%B %d, %Y") %></dd>
-              </div>
-            </dl>
-          </div>
-
-          <% if @property.latitude.present? && @property.longitude.present? %>
-            <div class="mt-8 pt-8 border-t">
-              <h3 class="text-xl font-semibold text-gray-900 mb-4">Location</h3>
-              <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg overflow-hidden">
-                <!-- Placeholder for map - you can integrate Google Maps or similar -->
-                <div class="flex items-center justify-center text-gray-500">
-                  <svg class="w-12 h-12 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  </svg>
-                  <span>Map View Available</span>
-                </div>
-              </div>
-            </div>
-          <% end %>
+          </dl>
         </div>
 
-        <!-- Agent/Owner Info -->
-        <div class="bg-white rounded-2xl shadow-lg p-8">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Listed by</h3>
-          <div class="flex items-center space-x-4">
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-              <span class="text-2xl font-bold text-green-600"><%= @property.user.name.first.upcase %></span>
+        <!-- Listed By -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-8">
+          <h2 class="text-xl font-bold text-[#1A1A1A] mb-6">Listed By</h2>
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/25">
+              <span class="text-2xl font-black text-black"><%= @property.user.first_name.first.upcase %></span>
             </div>
             <div>
-              <h4 class="text-lg font-medium text-gray-900"><%= @property.user.name %></h4>
-              <p class="text-gray-600"><%= @property.user.role.capitalize %></p>
-              <p class="text-sm text-gray-500">Member since <%= @property.user.created_at.strftime("%B %Y") %></p>
+              <h3 class="text-lg font-bold text-[#1A1A1A]"><%= @property.user.name %></h3>
+              <p class="text-gray-500 capitalize"><%= @property.user.role %></p>
+              <p class="text-sm text-gray-400">Member since <%= @property.user.created_at.strftime("%B %Y") %></p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Sidebar -->
-      <div class="lg:col-span-1">
-        <!-- Price Card -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6 sticky top-4">
-          <div class="text-center mb-6">
-            <div class="text-3xl font-bold text-gray-900">
-              <%= @property.formatted_price %>
-            </div>
-            <div class="text-gray-600">per <%= @property.payment_frequency %></div>
+      <!-- Right Column - Sidebar -->
+      <div class="space-y-6">
+        
+        <!-- Contact Card (Sticky) -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 sticky top-24">
+          <!-- Price Display -->
+          <div class="text-center pb-6 border-b border-gray-100 mb-6">
+            <div class="text-3xl font-black text-[#1A1A1A]"><%= @property.formatted_price %></div>
+            <div class="text-gray-500"><%= @property.payment_text %></div>
           </div>
 
+          <!-- Favorite Button -->
           <% if user_signed_in? %>
             <% if current_user.favourited?(@property) %>
-              <%= button_to property_favourite_path(@property), method: :delete, class: "w-full btn-secondary mb-4" do %>
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path>
+              <%= button_to property_favourites_path(@property), method: :delete, class: "w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 border border-red-200 text-red-600 font-semibold rounded-xl hover:bg-red-100 transition-all mb-4" do %>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/>
                 </svg>
-                Remove from Favourites
+                Remove from Saved
               <% end %>
             <% else %>
-              <%= button_to property_favourites_path(@property), class: "w-full btn-outline mb-4" do %>
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              <%= button_to property_favourites_path(@property), class: "w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-50 border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 transition-all mb-4" do %>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                 </svg>
-                Save to Favourites
+                Save Property
               <% end %>
             <% end %>
           <% end %>
 
-          <div class="border-t pt-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Agent</h3>
+          <!-- Contact Form -->
+          <div class="pt-2">
+            <h3 class="text-lg font-bold text-[#1A1A1A] mb-4">Contact Agent</h3>
             <%= form_with model: [@property, @lead], local: true, class: "space-y-4" do |f| %>
               <% if @lead.errors.any? %>
-                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <h4 class="text-red-800 font-medium mb-2">Please fix the following errors:</h4>
-                  <ul class="list-disc list-inside text-sm text-red-700">
-                    <% @lead.errors.full_messages.each do |message| %>
-                      <li><%= message %></li>
-                    <% end %>
-                  </ul>
+                <div class="px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+                  <% @lead.errors.full_messages.each do |message| %>
+                    <p><%= message %></p>
+                  <% end %>
                 </div>
               <% end %>
 
@@ -194,58 +242,79 @@
               <% if user_signed_in? %>
                 <%= f.hidden_field :name, value: current_user.name %>
                 <%= f.hidden_field :email, value: current_user.email %>
-                <%= f.hidden_field :phone, value: current_user.phone %>
+                <%= f.hidden_field :phone, value: current_user.phone_number %>
               <% else %>
                 <div>
-                  <%= f.text_field :name, placeholder: "Your Name", class: "form-input", required: true %>
+                  <%= f.text_field :name, placeholder: "Your Name", 
+                      class: "w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all text-sm", 
+                      required: true %>
                 </div>
                 <div>
-                  <%= f.email_field :email, placeholder: "Your Email", class: "form-input", required: true %>
+                  <%= f.email_field :email, placeholder: "Your Email", 
+                      class: "w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all text-sm", 
+                      required: true %>
                 </div>
                 <div>
-                  <%= f.text_field :phone, placeholder: "Your Phone", class: "form-input", required: true %>
+                  <%= f.text_field :phone, placeholder: "Your Phone", 
+                      class: "w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all text-sm", 
+                      required: true %>
                 </div>
               <% end %>
               
               <div>
-                <%= f.text_area :message, placeholder: "Hi, I'm interested in this property. Please contact me with more information.", 
-                    class: "form-textarea", rows: 4, required: true %>
+                <%= f.text_area :message, 
+                    placeholder: "Hi, I'm interested in this property. Please contact me with more information.", 
+                    class: "w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all resize-none text-sm", 
+                    rows: 4, 
+                    required: true %>
               </div>
 
-              <%= f.submit "Send Enquiry", class: "w-full btn-primary" %>
+              <%= f.submit "Send Enquiry", class: "w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-black font-bold rounded-xl transition-all duration-300 cursor-pointer" %>
               
-              <p class="text-xs text-gray-500 text-center">
-                By sending an enquiry, you agree to our Terms of Use and Privacy Policy
+              <p class="text-xs text-gray-400 text-center">
+                By sending an enquiry, you agree to our Terms of Use
               </p>
             <% end %>
           </div>
         </div>
 
-        <!-- Share Buttons -->
-        <div class="bg-white rounded-2xl shadow-lg p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Share this property</h3>
-          <div class="flex space-x-3">
-            <a href="#" class="flex-1 bg-gray-100 hover:bg-gray-200 rounded-lg p-3 flex items-center justify-center transition-colors">
-              <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+        <!-- Share Card -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6">
+          <h3 class="text-lg font-bold text-[#1A1A1A] mb-4">Share Property</h3>
+          <div class="flex gap-3">
+            <a href="https://twitter.com/intent/tweet?url=<%= ERB::Util.url_encode(property_url(@property)) %>&text=<%= ERB::Util.url_encode(@property.title) %>" 
+               target="_blank"
+               class="flex-1 flex items-center justify-center p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+              <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
               </svg>
             </a>
-            <a href="#" class="flex-1 bg-gray-100 hover:bg-gray-200 rounded-lg p-3 flex items-center justify-center transition-colors">
-              <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=<%= ERB::Util.url_encode(property_url(@property)) %>" 
+               target="_blank"
+               class="flex-1 flex items-center justify-center p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+              <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
             </a>
-            <a href="#" class="flex-1 bg-gray-100 hover:bg-gray-200 rounded-lg p-3 flex items-center justify-center transition-colors">
-              <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+            <a href="https://wa.me/?text=<%= ERB::Util.url_encode(@property.title + ' - ' + property_url(@property)) %>" 
+               target="_blank"
+               class="flex-1 flex items-center justify-center p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+              <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
               </svg>
             </a>
+            <button onclick="navigator.clipboard.writeText('<%= property_url(@property) %>'); alert('Link copied!')"
+                    class="flex-1 flex items-center justify-center p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <script>
   function changeImage(imageUrl) {
