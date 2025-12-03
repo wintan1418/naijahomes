@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   
   resources :properties do
     resources :leads, only: [:create]
+    resources :favourites, only: [:create] do
+      collection do
+        delete :destroy
+      end
+    end
   end
   
   namespace :landlord do

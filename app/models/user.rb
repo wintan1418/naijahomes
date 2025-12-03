@@ -27,11 +27,17 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
   
+  alias_method :name, :full_name
+  
   def landlord_or_agent?
     landlord? || agent?
   end
   
   def can_manage_properties?
     landlord? || agent? || admin?
+  end
+  
+  def favourited?(property)
+    favourites.exists?(property: property)
   end
 end
