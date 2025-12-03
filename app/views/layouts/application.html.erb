@@ -43,7 +43,7 @@
             <% if user_signed_in? %>
               <!-- User Dropdown -->
               <div class="relative" data-controller="dropdown">
-                <button data-action="click->dropdown#toggle" class="user-dropdown-btn flex items-center gap-3 px-4 py-2 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
+                <button type="button" data-action="click->dropdown#toggle" class="user-dropdown-btn flex items-center gap-3 px-4 py-2 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
                   <div class="w-8 h-8 bg-[#008751] rounded-lg flex items-center justify-center text-white text-sm font-bold">
                     <%= current_user.first_name&.first&.upcase || current_user.email.first.upcase %>
                   </div>
@@ -237,86 +237,45 @@
       </div>
     </footer>
 
-    <!-- Navbar & Dropdown Scripts -->
+    <!-- Navbar Scroll Script -->
     <script>
-      function initNavbar() {
-        const navbar = document.querySelector('nav');
-        const logo = document.querySelector('[data-navbar-target="logo"]');
-        const links = document.querySelectorAll('[data-navbar-target="link"]');
-        const userBtn = document.querySelector('.user-dropdown-btn');
-        
-        if (!navbar) return;
-        
-        function updateNavbar() {
-          const isHome = window.location.pathname === '/' || window.location.pathname === '';
-          const scrolled = window.scrollY > 50;
+      (function() {
+        function initNavbar() {
+          const navbar = document.querySelector('nav');
+          const logo = document.querySelector('[data-navbar-target="logo"]');
+          const links = document.querySelectorAll('[data-navbar-target="link"]');
+          const userBtn = document.querySelector('.user-dropdown-btn');
           
-          if (isHome && !scrolled) {
-            navbar.classList.remove('bg-white', 'shadow-lg');
-            navbar.classList.add('bg-transparent');
-            if (logo) logo.classList.remove('!text-[#1A1A1A]');
-            if (userBtn) userBtn.classList.remove('!bg-gray-100', '!text-[#1A1A1A]');
-            links.forEach(l => l.classList.remove('!text-gray-600'));
-          } else {
-            navbar.classList.add('bg-white', 'shadow-lg');
-            navbar.classList.remove('bg-transparent');
-            if (logo) logo.classList.add('!text-[#1A1A1A]');
-            if (userBtn) userBtn.classList.add('!bg-gray-100', '!text-[#1A1A1A]');
-            links.forEach(l => l.classList.add('!text-gray-600'));
-          }
-        }
-        
-        updateNavbar();
-        window.removeEventListener('scroll', updateNavbar);
-        window.addEventListener('scroll', updateNavbar);
-      }
-
-      function initDropdowns() {
-        document.querySelectorAll('[data-controller="dropdown"]').forEach(dropdown => {
-          const button = dropdown.querySelector('[data-action="click->dropdown#toggle"]');
-          const menu = dropdown.querySelector('[data-dropdown-target="menu"]');
+          if (!navbar) return;
           
-          if (button && menu) {
-            // Remove old listeners by cloning
-            const newButton = button.cloneNode(true);
-            button.parentNode.replaceChild(newButton, button);
+          function updateNavbar() {
+            const isHome = window.location.pathname === '/' || window.location.pathname === '';
+            const scrolled = window.scrollY > 50;
             
-            newButton.addEventListener('click', (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              menu.classList.toggle('hidden');
-            });
+            if (isHome && !scrolled) {
+              navbar.classList.remove('bg-white', 'shadow-lg');
+              navbar.classList.add('bg-transparent');
+              if (logo) logo.classList.remove('!text-[#1A1A1A]');
+              if (userBtn) userBtn.classList.remove('!bg-gray-100', '!text-[#1A1A1A]');
+              links.forEach(l => l.classList.remove('!text-gray-600'));
+            } else {
+              navbar.classList.add('bg-white', 'shadow-lg');
+              navbar.classList.remove('bg-transparent');
+              if (logo) logo.classList.add('!text-[#1A1A1A]');
+              if (userBtn) userBtn.classList.add('!bg-gray-100', '!text-[#1A1A1A]');
+              links.forEach(l => l.classList.add('!text-gray-600'));
+            }
           }
-        });
-        
-        // Close dropdowns when clicking outside
-        document.removeEventListener('click', closeDropdowns);
-        document.addEventListener('click', closeDropdowns);
-      }
-      
-      function closeDropdowns(e) {
-        document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
-          if (!menu.closest('[data-controller="dropdown"]').contains(e.target)) {
-            menu.classList.add('hidden');
-          }
-        });
-      }
+          
+          updateNavbar();
+          window.addEventListener('scroll', updateNavbar);
+        }
 
-      // Initialize on page load and Turbo navigation
-      document.addEventListener('DOMContentLoaded', () => {
-        initNavbar();
-        initDropdowns();
-      });
-      
-      document.addEventListener('turbo:load', () => {
-        initNavbar();
-        initDropdowns();
-      });
-      
-      document.addEventListener('turbo:render', () => {
-        initNavbar();
-        initDropdowns();
-      });
+        // Initialize on page load and Turbo navigation
+        document.addEventListener('DOMContentLoaded', initNavbar);
+        document.addEventListener('turbo:load', initNavbar);
+        document.addEventListener('turbo:render', initNavbar);
+      })();
     </script>
   </body>
 </html>
