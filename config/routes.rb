@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   root "home#index"
   get "properties", to: "properties#index", as: :properties
   
+  resource :profile, only: [:show]
+  
   resources :properties do
     resources :leads, only: [:create]
     resources :favourites, only: [:create] do
