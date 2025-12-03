@@ -1,0 +1,244 @@
+<!-- Leads Management Page -->
+<section class="relative bg-[#0A0A0A] pt-24 pb-12 overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-[#008751]/10 to-emerald-600/5 blur-[100px]"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-black text-white mb-2">Lead Management</h1>
+        <p class="text-gray-300">Track and manage your property inquiries</p>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <span class="text-[#008751] font-medium">
+          <%= pluralize(@leads.count, 'lead') %>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<section class="bg-[#FAFAF9] py-12 min-h-screen">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    
+    <!-- Filters -->
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 mb-8">
+      <div class="flex flex-wrap gap-4 items-center">
+        <!-- Search -->
+        <div class="flex-1 min-w-[200px]">
+          <%= form_with url: landlord_leads_path, method: :get, local: true, class: "flex items-center gap-4" do |form| %>
+            <%= form.text_field :search, 
+                value: params[:search],
+                placeholder: "Search leads, properties...",
+                class: "flex-1 px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#008751] focus:border-[#008751] transition-colors" %>
+            
+            <!-- Status Filter -->
+            <%= form.select :status,
+                options_for_select([
+                  ['All Statuses', ''],
+                  ['New Leads', 'new_lead'],
+                  ['Contacted', 'contacted'],
+                  ['Viewing Scheduled', 'viewing_scheduled'],
+                  ['Offer Made', 'offer_made'],
+                  ['Negotiating', 'negotiating'],
+                  ['Closed Won', 'closed_won'],
+                  ['Closed Lost', 'closed_lost']
+                ], params[:status]),
+                {},
+                { class: "px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#008751] focus:border-[#008751] transition-colors" } %>
+            
+            <!-- Priority Filter -->
+            <%= form.select :priority,
+                options_for_select([
+                  ['All Priorities', ''],
+                  ['Low', 'low'],
+                  ['Medium', 'medium'],
+                  ['High', 'high'],
+                  ['Urgent', 'urgent']
+                ], params[:priority]),
+                {},
+                { class: "px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#008751] focus:border-[#008751] transition-colors" } %>
+            
+            <%= form.submit "Filter", class: "px-6 py-2 bg-[#008751] text-white font-medium rounded-xl hover:bg-[#007542] transition-colors" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <% if @analytics && @analytics[:pipeline] %>
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-8">
+        <% @analytics[:pipeline].each do |stage| %>
+          <div class="bg-white rounded-xl border border-gray-100 p-4 text-center">
+            <div class="text-2xl font-black text-[#008751] mb-1"><%= stage[:count] %></div>
+            <div class="text-xs font-medium text-gray-600"><%= stage[:status] %></div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Leads Table -->
+    <% if @leads.any? %>
+      <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50 border-b border-gray-100">
+              <tr>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Lead</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Property</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Priority</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Budget</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Follow Up</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <% @leads.each do |lead| %>
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <!-- Lead Info -->
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 bg-[#008751] rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                        <%= lead.name.first.upcase %>
+                      </div>
+                      <div>
+                        <div class="font-semibold text-gray-900"><%= lead.name %></div>
+                        <div class="text-sm text-gray-500"><%= lead.email %></div>
+                        <div class="text-xs text-gray-400"><%= lead.phone %></div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Property -->
+                  <td class="px-6 py-4">
+                    <div class="font-medium text-gray-900 line-clamp-2">
+                      <%= link_to lead.property.title, property_path(lead.property), class: "hover:text-[#008751] transition-colors" %>
+                    </div>
+                    <div class="text-sm text-gray-500">
+                      <%= lead.property.location_text %>
+                    </div>
+                  </td>
+
+                  <!-- Status -->
+                  <td class="px-6 py-4">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                      <%= case lead.status
+                          when 'new_lead' then 'bg-blue-100 text-blue-700'
+                          when 'contacted' then 'bg-yellow-100 text-yellow-700'
+                          when 'viewing_scheduled' then 'bg-purple-100 text-purple-700'
+                          when 'offer_made' then 'bg-orange-100 text-orange-700'
+                          when 'negotiating' then 'bg-indigo-100 text-indigo-700'
+                          when 'closed_won' then 'bg-green-100 text-green-700'
+                          when 'closed_lost' then 'bg-red-100 text-red-700'
+                          else 'bg-gray-100 text-gray-700'
+                          end %>">
+                      <%= lead.status.humanize %>
+                    </span>
+                  </td>
+
+                  <!-- Priority -->
+                  <td class="px-6 py-4">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                      <%= case lead.priority
+                          when 'low' then 'bg-gray-100 text-gray-600'
+                          when 'medium' then 'bg-blue-100 text-blue-600'
+                          when 'high' then 'bg-orange-100 text-orange-600'
+                          when 'urgent' then 'bg-red-100 text-red-600'
+                          end %>">
+                      <%= lead.priority.humanize %>
+                    </span>
+                  </td>
+
+                  <!-- Budget -->
+                  <td class="px-6 py-4">
+                    <% if lead.budget.present? %>
+                      <div class="font-medium text-gray-900">₦<%= number_with_delimiter(lead.budget) %></div>
+                    <% else %>
+                      <span class="text-gray-400 text-sm">Not specified</span>
+                    <% end %>
+                  </td>
+
+                  <!-- Follow Up -->
+                  <td class="px-6 py-4">
+                    <% if lead.follow_up_at.present? %>
+                      <div class="text-sm <%= lead.overdue? ? 'text-red-600 font-medium' : 'text-gray-600' %>">
+                        <%= time_ago_in_words(lead.follow_up_at) %>
+                        <%= lead.overdue? ? 'overdue' : 'from now' %>
+                      </div>
+                    <% else %>
+                      <span class="text-gray-400 text-sm">No follow up</span>
+                    <% end %>
+                  </td>
+
+                  <!-- Actions -->
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <%= link_to landlord_lead_path(lead), class: "p-2 text-gray-600 hover:text-[#008751] hover:bg-green-50 rounded-lg transition-colors" do %>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                      <% end %>
+
+                      <% if lead.can_advance_status? %>
+                        <%= button_to advance_status_landlord_lead_path(lead), 
+                            method: :patch,
+                            remote: true,
+                            class: "p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors",
+                            title: "Advance Status" do %>
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                          </svg>
+                        <% end %>
+                      <% end %>
+
+                      <% unless lead.closed? %>
+                        <%= button_to mark_as_lost_landlord_lead_path(lead),
+                            method: :patch,
+                            remote: true,
+                            class: "p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors",
+                            data: { confirm: "Mark this lead as lost?" },
+                            title: "Mark as Lost" do %>
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                          </svg>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-16">
+        <div class="w-32 h-32 bg-gradient-to-br from-[#008751]/10 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-8">
+          <svg class="w-16 h-16 text-[#008751]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        
+        <h2 class="text-3xl font-bold text-[#1A1A1A] mb-4">No Leads Yet</h2>
+        <p class="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+          Leads will appear here when people inquire about your properties.
+        </p>
+        
+        <%= link_to new_landlord_property_path, 
+            class: "inline-flex items-center gap-3 px-8 py-4 bg-[#008751] text-white font-bold rounded-xl hover:bg-[#007542] transition-all" do %>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Add More Properties
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>
