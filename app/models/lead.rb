@@ -57,6 +57,7 @@ class Lead < ApplicationRecord
   after_create :assign_to_property_owner, :log_status_change
   after_update :log_status_change, if: :saved_change_to_status?
   before_save :set_priority_based_on_budget
+  validate :valid_status_transition, if: :status_changed?
   
   # Methods
   def status_color
@@ -120,6 +121,9 @@ class Lead < ApplicationRecord
   end
   
   def advance_status!
+    next_status = next_status_in_pipeline
+    return false unless next_status
+    
     case status
     when 'new_lead'
       update!(status: :contacted, follow_up_at: 1.day.from_now)
@@ -131,6 +135,21 @@ class Lead < ApplicationRecord
       update!(status: :negotiating, follow_up_at: 1.day.from_now)
     when 'negotiating'
       update!(status: :closed_won, follow_up_at: nil)
+    end
+  end
+  
+  def can_advance_status?
+    next_status_in_pipeline.present?
+  end
+  
+  def next_status_in_pipeline
+    case status
+    when 'new_lead' then 'contacted'
+    when 'contacted' then 'viewing_scheduled'
+    when 'viewing_scheduled' then 'offer_made'
+    when 'offer_made' then 'negotiating'
+    when 'negotiating' then 'closed_won'
+    else nil
     end
   end
   
@@ -158,6 +177,32 @@ class Lead < ApplicationRecord
     
     # Calculate based on conversion probability and budget
     (budget * (conversion_probability / 100.0)).round
+  end
+  
+  def can_be_reopened?
+    closed_lost?
+  end
+  
+  def reopen!
+    return false unless can_be_reopened?
+    
+    update!(
+      status: :new_lead,
+      follow_up_at: 1.day.from_now,
+      lost_reason: nil
+    )
+  end
+  
+  def closed?
+    closed_won? || closed_lost?
+  end
+  
+  def in_progress?
+    !new_lead? && !closed?
+  end
+  
+  def requires_follow_up?
+    follow_up_at.present? && follow_up_at <= Time.current && !closed?
   end
   
   private
@@ -195,5 +240,42 @@ class Lead < ApplicationRecord
     else
       self.priority = :low
     end
+  end
+  
+  def valid_status_transition
+    return unless status_was.present?
+    
+    # Define valid status transitions
+    valid_transitions = {
+      'new_lead' => ['contacted', 'closed_lost'],
+      'contacted' => ['new_lead', 'viewing_scheduled', 'closed_lost'],
+      'viewing_scheduled' => ['contacted', 'offer_made', 'closed_lost'],
+      'offer_made' => ['viewing_scheduled', 'negotiating', 'closed_lost'],
+      'negotiating' => ['offer_made', 'closed_won', 'closed_lost'],
+      'closed_won' => [], # Final state
+      'closed_lost' => ['new_lead'] # Can reopen lost leads
+    }
+    
+    allowed_statuses = valid_transitions[status_was] || []
+    
+    unless allowed_statuses.include?(status)
+      errors.add(:status, "cannot transition from #{status_was.humanize} to #{status.humanize}")
+    end
+    
+    # Prevent direct jumps except for marking as lost
+    if status != 'closed_lost' && !consecutive_status?(status_was, status)
+      errors.add(:status, "must follow proper progression or can only skip to mark as lost")
+    end
+  end
+  
+  def consecutive_status?(from, to)
+    status_order = ['new_lead', 'contacted', 'viewing_scheduled', 'offer_made', 'negotiating', 'closed_won']
+    from_index = status_order.index(from)
+    to_index = status_order.index(to)
+    
+    return false unless from_index && to_index
+    
+    # Allow moving forward one step or backward one step
+    (to_index - from_index).abs <= 1
   end
 end

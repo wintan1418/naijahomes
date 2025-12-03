@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get "properties", to: "properties#index", as: :properties
   
   resource :profile, only: [:show]
+  resources :favourites, only: [:index]
   
   resources :properties do
     resources :leads, only: [:create]
